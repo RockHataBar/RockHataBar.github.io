@@ -1,291 +1,469 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <title>RockHata Menu</title>
-  <style>
-    @font-face {
-      font-family: 'Johnson';
-      src: url('Johnson.woff2') format('woff2');
-      font-weight: normal; font-style: normal; font-display: swap;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RockHata Bar Menu</title>
+    <style>
+        /* ================= БАЗОВІ СТИЛІ (ВАШ ДИЗАЙН) ================= */
+        :root {
+            --bg-color: #121212;
+            --surface-color: #1e1e1e;
+            --primary-color: #d32f2f; /* Червоний акцент */
+            --text-main: #ffffff;
+            --text-muted: #aaaaaa;
+            --nav-height: 60px;
+        }
 
-    :root {
-      --gold: #FFD700;
-      --bg: #000;
-      --text: #fff;
-      --secondary: #ccc;
-      --nav-bg: rgba(17, 17, 17, 0.95);
-    }
+        body {
+            margin: 0;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding-bottom: 80px; /* Місце для плаваючої кнопки корзини */
+        }
 
-    /* Исправление поведения адресной строки и плавный скролл */
-    html {
-      scroll-behavior: smooth;
-      scroll-padding-top: 85px; /* Высота липкой шапки */
-      height: 101%; /* Гарантирует наличие скролла для активации интерфейса браузера */
-    }
+        h1, h2, h3, p { margin: 0; }
 
-   * { box-sizing: border-box; }
+        /* ================= ШАПКА ТА НАВІГАЦІЯ ================= */
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--bg-color);
+        }
 
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 100px; /* Увеличил, чтобы был запас */
-}
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            background-color: var(--surface-color);
+            height: var(--nav-height);
+            display: flex;
+            align-items: center;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 0 15px;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
 
-body {
-  margin: 0;
-  padding: 0 0 60px 0; /* Убрал боковые отступы здесь */
-  background-color: var(--bg);
-  color: var(--gold);
-  font-family: 'Johnson', sans-serif;
-  overflow-x: hidden; /* Защита от горизонтального скролла всей страницы */
-}
+        /* Ховаємо скроллбар для краси */
+        .sticky-nav::-webkit-scrollbar { display: none; }
+        .sticky-nav { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* Контент ограничиваем отдельно, чтобы навигация была на всю ширину */
-h1, #menu-content {
-  padding: 0 20px;
-}
+        .nav-item {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            margin-right: 20px;
+            padding: 10px 0;
+            border-bottom: 2px solid transparent;
+            transition: color 0.3s, border-color 0.3s;
+        }
 
-.navbar {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  background: var(--nav-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-bottom: 1px solid #222;
-}
+        .nav-item.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
 
-.nav-center-brand { 
-  text-align: center; 
-  padding: 10px 0 5px 0; 
-  font-size: 18px; 
-  font-weight: bold; 
-  letter-spacing: 3px; 
-}
-.nav-center-brand a { color: var(--gold); text-decoration: none; }
+        /* ================= КАТАЛОГ ================= */
+        .menu-container {
+            padding: 0 15px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
 
-.nav-container {
-  display: flex; 
-  overflow-x: auto; 
-  -webkit-overflow-scrolling: touch;
-  padding: 12px 20px; 
-  gap: 20px; /* Увеличил расстояние для удобства нажатия пальцем */
-  align-items: center;
-  
-  /* Скрываем скроллбар для всех браузеров */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
-}
+        .category-section {
+            padding-top: calc(var(--nav-height) + 20px); /* Відступ, щоб заголовок не ховався під меню */
+            margin-top: calc(var(--nav-height) * -1);
+            margin-bottom: 30px;
+        }
 
-/* Скрываем скроллбар для Chrome/Safari */
-.nav-container::-webkit-scrollbar { 
-  display: none; 
-}
+        .category-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
 
-.nav-container a {
-  display: inline-block; /* Чтобы padding и border работали корректно */
-  color: var(--gold); 
-  text-decoration: none; 
-  font-weight: bold;
-  font-size: 14px; 
-  white-space: nowrap; 
-  letter-spacing: 1px; 
-  transition: 0.3s;
-  padding-bottom: 8px; /* Чуть больше места для линии */
-  opacity: 0.7;
-}
+        .product-card {
+            display: flex;
+            background-color: var(--surface-color);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            padding: 10px;
+            gap: 15px;
+        }
 
-.nav-container a.active { 
-  color: var(--text); 
-  opacity: 1;
-  border-bottom: 2px solid var(--gold); 
-}
-    /* 🍹 Стилизация продуктов */
-    h1 { text-align: center; font-size: 32px; letter-spacing: 3px; margin: 20px 0; }
-    h2 { border-bottom: 1px solid #333; padding-bottom: 8px; margin: 30px 0 15px 0; color: var(--text); font-size: 22px; text-transform: uppercase; }
+        .product-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            object-fit: cover;
+            background-color: #333;
+        }
 
-    .drink {
-      display: flex; justify-content: space-between; align-items: flex-start;
-      border-bottom: 1px solid #222; padding: 16px 0; gap: 12px;
-    }
+        .product-info {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
 
-    .drink-info { flex: 1; }
-    .name { font-weight: bold; font-size: 17px; margin-bottom: 4px; color: var(--gold); text-transform: uppercase; }
-    .desc { color: var(--secondary); font-size: 13px; margin-bottom: 8px; line-height: 1.3; }
-    .volume-price { color: var(--text); font-size: 15px; font-weight: bold; white-space: nowrap; }
+        .product-name { font-size: 18px; font-weight: bold; }
+        .product-desc { font-size: 12px; color: var(--text-muted); margin: 5px 0; line-height: 1.4; }
+        .product-bottom { display: flex; justify-content: space-between; align-items: center; }
+        .product-price { font-size: 16px; font-weight: bold; }
+        
+        .add-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
 
-    /* Фото продукта */
-    .drink-image { width: 85px; height: 85px; flex-shrink: 0; cursor: pointer; overflow: hidden; border-radius: 8px; border: 1px solid #333; }
-    .drink-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+        /* ================= КОРЗИНА ТА МОДАЛКИ ================= */
+        .floating-cart {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.4);
+            cursor: pointer;
+            display: none; /* Сховано, поки корзина пуста */
+            z-index: 1000;
+            width: max-content;
+        }
 
-    /* 🖼️ Модальное окно (Увеличение фото) */
-    #modal {
-      display: none; position: fixed; z-index: 2000; top: 0; left: 0;
-      width: 100%; height: 100%; background: rgba(0,0,0,0.95);
-      justify-content: center; align-items: center; cursor: zoom-out;
-    }
-    #modal img { max-width: 90%; max-height: 80%; border-radius: 10px; border: 2px solid var(--gold); box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: flex-end; /* Модалка виїжджає знизу */
+            z-index: 2000;
+        }
 
-    @media (min-width: 768px) {
-      .nav-container { justify-content: center; }
-      .drink-image { width: 110px; height: 110px; }
-    }
-  </style>
+        .modal-overlay.active { display: flex; }
+
+        .modal-content {
+            background-color: var(--surface-color);
+            width: 100%;
+            max-width: 800px;
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 24px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .cart-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .qty-btn {
+            background-color: #333;
+            color: white;
+            border: none;
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+    </style>
 </head>
-<body id="top">
+<body>
 
-  <nav class="navbar">
-    <div class="nav-center-brand"><a href="#top">ROCK HATA</a></div>
-    <div class="nav-container">
-      <a href="#cocktails">Коктейлі</a>
-      <a href="#drinks">Напої</a>
-      <a href="#shots">Шоти</a>
-      <a href="#beer">Пиво</a>
-      <a href="#snacks">Снеки</a>
-      <a href="#nastoyanky">Настоянки</a>
-      <a href="#liqueurs">Лікери</a>
+    <header>
+        <h1>ROCKHATA</h1>
+        <p style="color: var(--text-muted); margin-top: 5px;">Drink & Rock</p>
+    </header>
+
+    <!-- Липке меню -->
+    <nav class="sticky-nav" id="stickyNav"></nav>
+
+    <!-- Контейнер для товарів -->
+    <main class="menu-container" id="menuContainer"></main>
+
+    <!-- Плаваюча кнопка корзини -->
+    <div class="floating-cart" id="floatingCart" onclick="openCart()">
+        Корзина: <span id="cartTotal">0</span> ₴
     </div>
-  </nav>
 
-  <h1>МЕНЮ</h1>
+    <!-- Модальне вікно корзини -->
+    <div class="modal-overlay" id="cartModal" onclick="closeCart(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="close-modal" onclick="document.getElementById('cartModal').classList.remove('active')">&times;</div>
+            <h2>Ваше замовлення</h2>
+            <div id="cartItemsContainer" style="margin-top: 20px;"></div>
+            <h3 style="margin-top: 20px; text-align: right;">Разом: <span id="cartModalTotal">0</span> ₴</h3>
+            <button class="checkout-btn" onclick="checkout()">Відправити замовлення</button>
+        </div>
+    </div>
 
-  <div id="menu-content">
-    <section id="cocktails"><h2>Коктейлі</h2><div id="menu-cocktails"></div></section>
-    <section id="drinks"><h2>Напої</h2><div id="menu-drinks"></div></section>
-    <section id="beer"><h2>Пиво</h2><div id="menu-beer"></div></section>
-    <section id="shots"><h2>Шоти</h2><div id="menu-shots"></div></section>
-    <section id="snacks"><h2>Снеки</h2><div id="menu-snacks"></div></section>
-    <section id="nastoyanky"><h2>Настоянки</h2><div id="menu-nastoyanky"></div></section>
-    <section id="liqueurs"><h2>Лікери</h2><div id="menu-liqueurs"></div></section>
-  </div>
+    <script>
+        // ================= БАЗА ДАНИХ МЕНЮ =================
+        // Заповніть вашими реальними позиціями
+        const menuData = [
+            {
+                id: 'cocktails',
+                title: 'Авторські Коктейлі',
+                items: [
+                    { id: 'c1', name: 'Rock Margarita', desc: 'Текіла, тріпл сек, лаймовий фреш, сироп агави, чорна сіль.', price: 180, img: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=200&q=80' },
+                    { id: 'c2', name: 'Nirvana', desc: 'Джин, пюре маракуї, лимонний фреш, білок.', price: 210, img: 'https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=200&q=80' },
+                    { id: 'c3', name: 'AC/DC Shot', desc: 'Міцний і швидкий. Абсент, самбука, бейліс.', price: 150, img: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=200&q=80' }
+                ]
+            },
+            {
+                id: 'beer',
+                title: 'Пиво',
+                items: [
+                    { id: 'b1', name: 'Craft IPA', desc: 'Світле крафтове, гірке та ароматне. 0.5л', price: 120, img: 'https://images.unsplash.com/photo-1538481199005-9715ce1eb3f5?auto=format&fit=crop&w=200&q=80' },
+                    { id: 'b2', name: 'Dark Stout', desc: 'Щільне темне з кавовими нотами. 0.5л', price: 130, img: 'https://images.unsplash.com/photo-1608270586620-248524c67de9?auto=format&fit=crop&w=200&q=80' }
+                ]
+            },
+            {
+                id: 'snacks',
+                title: 'Закуски',
+                items: [
+                    { id: 's1', name: 'Начос з сиром', desc: 'Кукурудзяні чіпси, сирний соус, халапеньйо.', price: 160, img: 'https://images.unsplash.com/photo-1513442542250-854d436a73f2?auto=format&fit=crop&w=200&q=80' },
+                    { id: 's2', name: 'В\'ялене м\'ясо', desc: 'Сет домашніх джеркі (яловичина, курка).', price: 190, img: 'https://images.unsplash.com/photo-1599598425947-330026296b00?auto=format&fit=crop&w=200&q=80' }
+                ]
+            }
+        ];
 
-   <div id="modal" onclick="this.style.display='none'; document.body.style.overflow='auto'">      <img id="modal-img" src="" alt="View">
-  </div>
+        // Корзина
+        let cart = {};
 
-  <script>
-    const menuData = {
-      cocktails: [
-        { name: 'ГРАНАТОВИЙ ВІСКІ САУРЕР', desc: 'ВІСКІ / СИРОП ГРАНАТ / СІК ГРАНАТ / ЛИМОННИЙ ФРЕШ', volume: '150 МЛ', price: '180 ₴', img: 'img/whisky_sauer.jpg' },
-        { name: 'CHERRY IVANSON', desc: 'ЗОЛОТИЙ РОМ / СИРОП ВИШНЯ / СІК ВИШНЯ / ЛИМОННИЙ ФРЕШ', volume: '150 МЛ', price: '180 ₴', img: '' },
-        { name: 'ДЖИН & ТОНІК', desc: 'ДЖИН / ТОНІК / ЛАЙМ', volume: '150 МЛ', price: '100 ₴', img: '' },
-        { name: 'ТЕКІЛА САНРАЙЗ', desc: 'ТЕКІЛА / АПЕЛЬСИНОВИЙ СІК / ГРЕНАДИН', volume: '150 МЛ', price: '120 ₴', img: '' },
-        { name: 'СЕКС ON ЗЕ БІЧ', desc: 'ГОРІЛКА / ПЕРСИКОВИЙ ЛІКЕР / АПЕЛЬСИНОВИЙ СІК / СІК ЖУРАВЛИНИ', volume: '200 МЛ', price: '110 ₴', img: '' },
-        { name: 'NEGRONI', desc: 'СУХИЙ ДЖИН / ЧЕРВОНИЙ ВЕРМУТ / БІТТЕР', volume: '200 МЛ', price: '200 ₴', img: '' },
-        { name: 'ROSO TONIC', desc: 'ЧЕРВОНИЙ ВЕРМУТ / ТОНІК / АПЕЛЬСИН', volume: '200 МЛ', price: '120 ₴', img: '' }
-      ],
-      drinks: [
-        { name: 'CUBA LIBRE', desc: 'ЗОЛОТИЙ РОМ / COCA COLA / ЛАЙМ', volume: '150 МЛ', price: '100 ₴', img: '' },
-        { name: 'СИНІЙ КАМІКАДЗЕ', desc: 'ГОРІЛКА / ЛИМОННИЙ СІК / BLU CURASAO', volume: '150 МЛ', price: '80 ₴', img: '' },
-        { name: 'КРИВАВА МЕРІ', desc: 'ГОРІЛКА / ТОМАТНИЙ СІК / ТАБАСКО / ВУСТЕРСЬКИЙ СОУС / ЛАЙМ', volume: '150 МЛ', price: '80 ₴', img: '' }
-      ],
-      beer: [
-        { name: 'pivko', desc: 'smachne', volume: '500 МЛ', price: 'desheve ₴', img: 'img/pivko.jpg' },
-        { name: 'pivko', desc: 'smachne', volume: '500 МЛ', price: 'desheve ₴', img: 'img/pivko.jpg' },
-        { name: 'pivko', desc: 'smachne', volume: '500 МЛ', price: 'desheve ₴', img: 'img/pivko.jpg' },
+        // ================= РЕНДЕР СТОРІНКИ =================
+        function initApp() {
+            const nav = document.getElementById('stickyNav');
+            const container = document.getElementById('menuContainer');
+            
+            menuData.forEach((category, index) => {
+                // Генерація навігації
+                const link = document.createElement('a');
+                link.href = `#${category.id}`;
+                link.className = `nav-item ${index === 0 ? 'active' : ''}`;
+                link.textContent = category.title;
+                // Плавний скролл
+                link.onclick = (e) => {
+                    e.preventDefault();
+                    document.getElementById(category.id).scrollIntoView({ behavior: 'smooth' });
+                };
+                nav.appendChild(link);
 
-      ],
-      shots: [
-        { name: 'ПАН ІВАН', desc: 'ГОРІЛКА / ЛИМОННИЙ СІК / ГРЕНАДИН', volume: '50 МЛ', price: '80 ₴', img: '' },
-        { name: 'ПРАПОР', desc: 'ГОРІЛКА / ЛІКЕР АПЕЛЬСИНОВИЙ', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'КАЙДАШ', desc: 'ГОРІЛКА / ТАБАСКО / ГРЕНАДИН', volume: '50 МЛ', price: '60 ₴', img: '' },
-        { name: 'ЗЕЛЕНИЙ МЕКСИКАНЕЦЬ', desc: 'ТЕКІЛА / ЛІКЕР ЗЕЛЕНИЙ БАНАН / ФРЕШ ЛАЙМА', volume: '50 МЛ', price: '110 ₴', img: '' },
-        { name: 'МЕРКУРІЙ', desc: 'САМБУКА / БЕЙЛІЗ / ГРЕНАДИН', volume: '50 МЛ', price: '90 ₴', img: '' }
-      ],
-      snacks: [
-        { name: 'КАРТОПЛЯ ФРІ', desc: '', volume: '', price: '100 ₴', img: '' },
-        { name: 'НАГЕТСИ', desc: '', volume: '', price: '140 ₴', img: '' },
-        { name: 'СИРНІ ПАЛИЧКИ', desc: '', volume: '', price: '220 ₴', img: '' }
-      ],
-      liqueurs: [
-        { name: 'АПЕЛЬСИН', desc: '20%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'ЛЯЛЯ ЧОРНА', desc: '20%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'ЛИМОН', desc: '20%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'ШОКОЛАД', desc: '20%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'ЯГІДНИЙ', desc: '20%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'ЛАЙМ', desc: '20%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'МАЛИНА', desc: '20%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'КАВА З МЕДОМ', desc: '20%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'ВИШНЯ', desc: '20%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'БАРБАРИС', desc: '20%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'ЖУРАВЛИНА', desc: '20%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'ЦУКЕРКА', desc: '20%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: "ЛИМОН М'ЯТА", desc: '20%', volume: '50 МЛ', price: '50 ₴', img: '' }
-      ],
-      nastoyanky: [
-        { name: 'АНІС', desc: '40%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'ЯГІДНА', desc: '40%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'ТАРХУН', desc: '40%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'МЕНТОЛ', desc: '40%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'СМАК ДИТИНСТВА', desc: '40%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'ТВІСТ', desc: '40%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'ГОРОБИНА З МЕДОМ', desc: '40%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'ВИШНЯ', desc: '40%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'ЗЕЛЕНИЙ ЗМІЙ', desc: '40%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'ROCK HATA', desc: '40%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'ROCK-&-ROLL', desc: '40%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'БУГІ-ВУГІ', desc: '40%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'БАЙРАКТАР', desc: '40%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'ЧОРНОБАЇВКА', desc: '40%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'МАЛИНА', desc: '40%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'АБРИКОС', desc: '40%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'ДЖОННІ', desc: '40%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'ЛИМОНАДНИЙ ДЖО', desc: '40%', volume: '50 МЛ', price: '50 ₴', img: '' },
-        { name: 'АВАТАР', desc: '40%', volume: '50 МЛ', price: '50 ₴', img: '' }
-      ]
-    };
+                // Генерація категорій та товарів
+                let html = `
+                    <div id="${category.id}" class="category-section">
+                        <h2 class="category-title">${category.title}</h2>
+                `;
+                
+                category.items.forEach(item => {
+                    html += `
+                        <div class="product-card">
+                            <img src="${item.img}" alt="${item.name}" class="product-img">
+                            <div class="product-info">
+                                <div>
+                                    <div class="product-name">${item.name}</div>
+                                    <div class="product-desc">${item.desc}</div>
+                                </div>
+                                <div class="product-bottom">
+                                    <div class="product-price">${item.price} ₴</div>
+                                    <button class="add-btn" onclick="addToCart('${item.id}', '${item.name}', ${item.price})">В корзину</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `</div>`;
+                container.innerHTML += html;
+            });
 
-    function openModal(src) {
-  const modal = document.getElementById('modal');
-  const modalImg = document.getElementById('modal-img');
-  modalImg.src = src;
-  modal.style.display = 'flex';
-  document.body.style.overflow = 'hidden';
-    }
-
-    function renderMenu(items, containerId) {
-      const menuDiv = document.getElementById(containerId);
-      if(!menuDiv) return;
-      items.forEach((drink) => {
-        const drinkDiv = document.createElement('div');
-        drinkDiv.className = 'drink';
-
-        const infoDiv = document.createElement('div');
-        infoDiv.className = 'drink-info';
-        infoDiv.innerHTML = `
-          <div class="name">${drink.name}</div>
-          ${drink.desc ? `<div class="desc">${drink.desc}</div>` : ''}
-          <div class="volume-price">${drink.volume ? drink.volume + ' — ' : ''}${drink.price}</div>
-        `;
-
-        drinkDiv.appendChild(infoDiv);
-
-        if (drink.img) {
-  const imgDiv = document.createElement('div');
-  imgDiv.className = 'drink-image';
-          imgDiv.onclick = () => openModal(drink.img);
-          imgDiv.innerHTML = `<img src="${drink.img}" alt="${drink.name}" loading="lazy">`;
-          drinkDiv.appendChild(imgDiv);
+            setupScrollSpy();
         }
-        menuDiv.appendChild(drinkDiv);
-      });
-    }
 
-    Object.entries(menuData).forEach(([key, items]) => renderMenu(items, `menu-${key}`));
+        // ================= SCROLLSPY (Підсвітка активного меню) =================
+        function setupScrollSpy() {
+            const sections = document.querySelectorAll('.category-section');
+            const navLinks = document.querySelectorAll('.nav-item');
+            const navContainer = document.getElementById('stickyNav');
 
-    const sections = document.querySelectorAll("section");
-    const navLinks = document.querySelectorAll(".nav-container a");
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          navLinks.forEach(link => {
-            link.classList.toggle("active", link.getAttribute("href") === `#${entry.target.id}`);
-          });
+            const observerOptions = {
+                root: null,
+                rootMargin: '-70px 0px -60% 0px', // Налаштування точки спрацьовування
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const currentId = entry.target.id;
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === `#${currentId}`) {
+                                link.classList.add('active');
+                                // Прокрутка липкого меню, щоб активний елемент був по центру
+                                link.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => observer.observe(section));
         }
-      });
-    }, { threshold: 0.3, rootMargin: "-10% 0px -70% 0px" });
-    sections.forEach(section => observer.observe(section));
-  </script>
+
+        // ================= ЛОГІКА КОРЗИНИ =================
+        function addToCart(id, name, price) {
+            if (cart[id]) {
+                cart[id].qty += 1;
+            } else {
+                cart[id] = { name, price, qty: 1 };
+            }
+            updateCartUI();
+        }
+
+        function changeQty(id, delta) {
+            if (cart[id]) {
+                cart[id].qty += delta;
+                if (cart[id].qty <= 0) {
+                    delete cart[id];
+                }
+            }
+            updateCartUI();
+            renderCartModal(); // Оновлюємо вікно відразу
+        }
+
+        function updateCartUI() {
+            const floatingCart = document.getElementById('floatingCart');
+            const cartTotalEl = document.getElementById('cartTotal');
+            
+            let totalSum = 0;
+            let totalItems = 0;
+
+            for (let key in cart) {
+                totalSum += cart[key].price * cart[key].qty;
+                totalItems += cart[key].qty;
+            }
+
+            if (totalItems > 0) {
+                floatingCart.style.display = 'block';
+                cartTotalEl.textContent = totalSum;
+            } else {
+                floatingCart.style.display = 'none';
+                document.getElementById('cartModal').classList.remove('active');
+            }
+        }
+
+        // ================= МОДАЛКА КОРЗИНИ =================
+        function openCart() {
+            renderCartModal();
+            document.getElementById('cartModal').classList.add('active');
+        }
+
+        function closeCart(e) {
+            if (e.target.id === 'cartModal') {
+                document.getElementById('cartModal').classList.remove('active');
+            }
+        }
+
+        function renderCartModal() {
+            const container = document.getElementById('cartItemsContainer');
+            const modalTotal = document.getElementById('cartModalTotal');
+            container.innerHTML = '';
+            let totalSum = 0;
+
+            for (let id in cart) {
+                const item = cart[id];
+                totalSum += item.price * item.qty;
+                
+                container.innerHTML += `
+                    <div class="cart-item">
+                        <div style="flex-grow: 1;">
+                            <div style="font-weight: bold;">${item.name}</div>
+                            <div style="color: var(--text-muted);">${item.price} ₴</div>
+                        </div>
+                        <div class="cart-controls">
+                            <button class="qty-btn" onclick="changeQty('${id}', -1)">-</button>
+                            <span style="font-size: 18px;">${item.qty}</span>
+                            <button class="qty-btn" onclick="changeQty('${id}', 1)">+</button>
+                        </div>
+                    </div>
+                `;
+            }
+            modalTotal.textContent = totalSum;
+        }
+
+        // ================= ВІДПРАВКА ЗАМОВЛЕННЯ =================
+        function checkout() {
+            // Оскільки у вас GitHub Pages без бэкенда, 
+            // генеруємо текст для відправки через Telegram або Viber
+            
+            let orderText = "Нове замовлення:%0A%0A";
+            let totalSum = 0;
+            
+            for (let id in cart) {
+                orderText += `- ${cart[id].name} x${cart[id].qty} (${cart[id].price * cart[id].qty} ₴)%0A`;
+                totalSum += cart[id].price * cart[id].qty;
+            }
+            orderText += `%0AЗагальна сума: ${totalSum} ₴`;
+
+            // Варіант 1: Відкрити клієнт Telegram (зручно, якщо бармен має свій аккаунт)
+            // Замініть 'your_bar_username' на username адміна або бота
+            const telegramUrl = `https://t.me/your_bar_username?text=${orderText}`;
+            window.open(telegramUrl, '_blank');
+
+            // Очищення корзини після "відправки"
+            cart = {};
+            updateCartUI();
+        }
+
+        // Запуск
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
 </body>
 </html>
