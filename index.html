@@ -23,6 +23,8 @@
       --secondary: #9c9a95;
       --nav-bg: rgba(10, 10, 11, 0.94);
       --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+      --status-open: #6fbf73;
+      --status-closed: #8a8884;
     }
 
     * { box-sizing: border-box; }
@@ -74,6 +76,27 @@
       margin-top: 4px;
       text-transform: uppercase;
     }
+
+    .brand-hours {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--secondary);
+      letter-spacing: 0.3px;
+    }
+
+    .brand-hours .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--status-closed);
+      flex-shrink: 0;
+    }
+
+    .brand-hours.is-open .status-dot { background: var(--status-open); }
+    .brand-hours.is-open .status-text { color: var(--status-open); }
 
     /* ================= ЧІПИ-КАТЕГОРІЇ ================= */
     .chips-bar {
@@ -229,6 +252,11 @@
         <div class="brand-name">ROCK HATA</div>
       </a>
       <div class="brand-tag">Bar Menu</div>
+      <div class="brand-hours" id="brandHours">
+        <span class="status-dot"></span>
+        <span class="status-text" id="statusText"></span>
+        <span>· Щодня 16:00–23:00</span>
+      </div>
     </div>
     <div class="chips-bar">
       <a href="#cocktails" class="chip">Коктейлі</a>
@@ -307,6 +335,23 @@
     }
 
     Object.entries(menuData).forEach(([key, items]) => renderMenu(items, `menu-${key}`));
+
+    // Графік роботи: без вихідних, 16:00–23:00 щодня.
+    const OPEN_HOUR = 16;
+    const CLOSE_HOUR = 23;
+
+    function updateOpenStatus() {
+      const hoursEl = document.getElementById('brandHours');
+      const textEl = document.getElementById('statusText');
+      if (!hoursEl || !textEl) return;
+      const hour = new Date().getHours();
+      const isOpen = hour >= OPEN_HOUR && hour < CLOSE_HOUR;
+      hoursEl.classList.toggle('is-open', isOpen);
+      textEl.textContent = isOpen ? 'Відкрито' : 'Зачинено';
+    }
+
+    updateOpenStatus();
+    setInterval(updateOpenStatus, 60000);
 
     // Раздели йдуть у DOM у тому ж порядку, що й на сторінці — це і є
     // джерело правди для того, який розділ зараз під шапкою.
