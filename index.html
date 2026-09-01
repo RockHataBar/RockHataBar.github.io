@@ -214,8 +214,8 @@
     <div class="chips-bar">
       <a href="#cocktails" class="chip">Коктейлі</a>
       <a href="#drinks" class="chip">Напої</a>
-      <a href="#shots" class="chip">Шоти</a>
       <a href="#beer" class="chip">Пиво</a>
+      <a href="#shots" class="chip">Шоти</a>
       <a href="#snacks" class="chip">Снеки</a>
       <a href="#nastoyanky" class="chip">Настоянки</a>
       <a href="#liqueurs" class="chip">Лікери</a>
@@ -279,18 +279,48 @@
 
     Object.entries(menuData).forEach(([key, items]) => renderMenu(items, `menu-${key}`));
 
-    const sections = document.querySelectorAll('section');
+    // Раздели йдуть у DOM у тому ж порядку, що й на сторінці — це і є
+    // джерело правди для того, який розділ зараз під шапкою.
+    const sections = Array.from(document.querySelectorAll('section'));
     const navLinks = document.querySelectorAll('.chip');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          navLinks.forEach(link => {
-            link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`);
-          });
+    const navbarEl = document.querySelector('.navbar');
+
+    function getHeaderOffset() {
+      return (navbarEl ? navbarEl.offsetHeight : 0) + 16;
+    }
+
+    function updateScrollPadding() {
+      document.documentElement.style.scrollPaddingTop = getHeaderOffset() + 'px';
+    }
+
+    function updateActiveChip() {
+      const scrollPos = window.scrollY + getHeaderOffset() + 1;
+      let currentId = sections[0] && sections[0].id;
+      for (const section of sections) {
+        if (section.offsetTop <= scrollPos) {
+          currentId = section.id;
+        } else {
+          break;
         }
+      }
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === `#${currentId}`);
       });
-    }, { threshold: 0.3, rootMargin: '-10% 0px -70% 0px' });
-    sections.forEach(section => observer.observe(section));
+    }
+
+    let ticking = false;
+    function onScroll() {
+      if (!ticking) {
+        requestAnimationFrame(() => { updateActiveChip(); ticking = false; });
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', () => { updateScrollPadding(); updateActiveChip(); });
+
+    updateScrollPadding();
+    updateActiveChip();
   </script>
 </body>
 </html>
