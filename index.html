@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>RockHata Menu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
   <style>
     @font-face {
       font-family: 'Johnson';
@@ -12,20 +15,21 @@
     }
 
     :root {
-      --gold: #f0c14b;
-      --bg: #0b0b0d;
-      --surface: #18181c;
-      --surface-2: #222227;
-      --text: #f5f5f2;
-      --secondary: #9a9aa0;
-      --nav-bg: rgba(12, 12, 14, 0.92);
+      --gold: #e6b93e;
+      --gold-dim: rgba(230, 185, 62, 0.75);
+      --chip-active-bg: #6e5f2c;
+      --bg: #0a0a0b;
+      --text: #f2f0ea;
+      --secondary: #9c9a95;
+      --nav-bg: rgba(10, 10, 11, 0.94);
+      --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
     }
 
     * { box-sizing: border-box; }
 
     html {
       scroll-behavior: smooth;
-      scroll-padding-top: 110px; /* высота липкої шапки + чипів */
+      scroll-padding-top: 110px;
       height: 101%;
     }
 
@@ -48,7 +52,7 @@
       background: var(--nav-bg);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      border-bottom: 1px solid #232326;
+      border-bottom: 1px solid #201f1a;
     }
 
     .brand-header {
@@ -76,8 +80,8 @@
       display: flex;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
-      gap: 8px;
-      padding: 12px 16px 14px;
+      gap: 18px;
+      padding: 10px 16px 14px;
       scrollbar-width: none;
       -ms-overflow-style: none;
     }
@@ -86,21 +90,20 @@
     .chip {
       flex-shrink: 0;
       display: inline-block;
-      color: var(--secondary);
-      background: var(--surface-2);
+      color: var(--gold-dim);
       text-decoration: none;
       font-weight: bold;
       font-size: 13px;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.4px;
       white-space: nowrap;
-      padding: 9px 18px;
+      padding: 8px 14px;
       border-radius: 999px;
       transition: background 0.25s, color 0.25s;
     }
 
     .chip.active {
-      color: #14140f;
-      background: var(--gold);
+      color: #fff;
+      background: var(--chip-active-bg);
     }
 
     /* ================= РОЗДІЛИ ================= */
@@ -113,7 +116,7 @@
       letter-spacing: 2.5px;
       text-transform: uppercase;
       color: var(--secondary);
-      margin: 30px 4px 12px;
+      margin: 28px 4px 6px;
     }
 
     .section-title::before {
@@ -124,65 +127,64 @@
       display: inline-block;
     }
 
-    section:first-of-type .section-title { margin-top: 6px; }
+    section:first-of-type .section-title { margin-top: 4px; }
 
-    /* ================= КАРТКА ТОВАРУ ================= */
-    .item-card {
+    /* ================= РЯДОК ТОВАРУ ================= */
+    .item-row {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      background: var(--surface);
-      border-radius: 16px;
-      padding: 12px;
-      margin-bottom: 10px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+      align-items: flex-start;
+      gap: 14px;
+      padding: 18px 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.16);
     }
+
+    section .items-list .item-row:last-child { border-bottom: none; }
 
     .item-info { flex: 1; min-width: 0; }
 
     .item-name {
-      font-weight: bold;
-      font-size: 15px;
-      letter-spacing: 0.3px;
-      text-transform: uppercase;
-      color: var(--text);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--gold);
+      line-height: 1.25;
+    }
+
+    .item-price {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--gold);
+      margin-top: 3px;
     }
 
     .item-desc {
       color: var(--secondary);
-      font-size: 12.5px;
-      line-height: 1.4;
-      margin: 4px 0 8px;
+      font-size: 13px;
+      line-height: 1.45;
+      margin-top: 8px;
     }
 
-    .item-footer {
+    .item-stats {
       display: flex;
-      align-items: baseline;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .item-volume {
-      font-size: 11px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
       color: var(--secondary);
+      font-size: 12px;
     }
 
-    .item-price {
-      font-weight: bold;
-      font-size: 15px;
-      color: var(--gold);
-    }
+    .item-stats svg { flex-shrink: 0; opacity: 0.8; }
 
     .item-photo {
-      width: 76px;
-      height: 76px;
+      width: 104px;
+      height: 132px;
       flex-shrink: 0;
       cursor: pointer;
       overflow: hidden;
-      border-radius: 12px;
+      border-radius: 14px;
+      background: #151513;
     }
     .item-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
@@ -192,11 +194,11 @@
       width: 100%; height: 100%; background: rgba(0,0,0,0.95);
       justify-content: center; align-items: center; cursor: zoom-out;
     }
-    #modal img { max-width: 90%; max-height: 80%; border-radius: 14px; border: 2px solid var(--gold); box-shadow: 0 0 20px rgba(240, 193, 75, 0.35); }
+    #modal img { max-width: 90%; max-height: 80%; border-radius: 14px; border: 2px solid var(--gold); box-shadow: 0 0 20px rgba(230, 185, 62, 0.3); }
 
     @media (min-width: 768px) {
       .chips-bar { justify-content: center; }
-      .item-photo { width: 96px; height: 96px; }
+      .item-photo { width: 120px; height: 150px; }
     }
   </style>
 </head>
@@ -221,13 +223,13 @@
   </nav>
 
   <div id="menu-content">
-    <section id="cocktails"><h2 class="section-title">Коктейлі</h2><div id="menu-cocktails"></div></section>
-    <section id="drinks"><h2 class="section-title">Напої</h2><div id="menu-drinks"></div></section>
-    <section id="beer"><h2 class="section-title">Пиво</h2><div id="menu-beer"></div></section>
-    <section id="shots"><h2 class="section-title">Шоти</h2><div id="menu-shots"></div></section>
-    <section id="snacks"><h2 class="section-title">Снеки</h2><div id="menu-snacks"></div></section>
-    <section id="nastoyanky"><h2 class="section-title">Настоянки</h2><div id="menu-nastoyanky"></div></section>
-    <section id="liqueurs"><h2 class="section-title">Лікери</h2><div id="menu-liqueurs"></div></section>
+    <section id="cocktails"><h2 class="section-title">Коктейлі</h2><div class="items-list" id="menu-cocktails"></div></section>
+    <section id="drinks"><h2 class="section-title">Напої</h2><div class="items-list" id="menu-drinks"></div></section>
+    <section id="beer"><h2 class="section-title">Пиво</h2><div class="items-list" id="menu-beer"></div></section>
+    <section id="shots"><h2 class="section-title">Шоти</h2><div class="items-list" id="menu-shots"></div></section>
+    <section id="snacks"><h2 class="section-title">Снеки</h2><div class="items-list" id="menu-snacks"></div></section>
+    <section id="nastoyanky"><h2 class="section-title">Настоянки</h2><div class="items-list" id="menu-nastoyanky"></div></section>
+    <section id="liqueurs"><h2 class="section-title">Лікери</h2><div class="items-list" id="menu-liqueurs"></div></section>
   </div>
 
   <div id="modal" onclick="this.style.display='none'; document.body.style.overflow='auto'">
@@ -236,6 +238,8 @@
 
   <script src="menu-data.js"></script>
   <script>
+    const VOLUME_ICON = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l-1.5 15a2 2 0 0 1-2 1.8h-5a2 2 0 0 1-2-1.8L6 3Z"/><path d="M5 3h14"/></svg>`;
+
     function openModal(src) {
       const modal = document.getElementById('modal');
       const modalImg = document.getElementById('modal-img');
@@ -248,30 +252,28 @@
       const menuDiv = document.getElementById(containerId);
       if (!menuDiv) return;
       items.forEach((drink) => {
-        const cardDiv = document.createElement('div');
-        cardDiv.className = 'item-card';
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'item-row';
 
         const infoDiv = document.createElement('div');
         infoDiv.className = 'item-info';
         infoDiv.innerHTML = `
           <div class="item-name">${drink.name}</div>
+          <div class="item-price">${drink.price}</div>
           ${drink.desc ? `<div class="item-desc">${drink.desc}</div>` : ''}
-          <div class="item-footer">
-            ${drink.volume ? `<span class="item-volume">${drink.volume}</span>` : ''}
-            <span class="item-price">${drink.price}</span>
-          </div>
+          ${drink.volume ? `<div class="item-stats">${VOLUME_ICON}<span>${drink.volume}</span></div>` : ''}
         `;
-        cardDiv.appendChild(infoDiv);
+        rowDiv.appendChild(infoDiv);
 
         if (drink.img) {
           const photoDiv = document.createElement('div');
           photoDiv.className = 'item-photo';
           photoDiv.onclick = () => openModal(drink.img);
           photoDiv.innerHTML = `<img src="${drink.img}" alt="${drink.name}" loading="lazy">`;
-          cardDiv.appendChild(photoDiv);
+          rowDiv.appendChild(photoDiv);
         }
 
-        menuDiv.appendChild(cardDiv);
+        menuDiv.appendChild(rowDiv);
       });
     }
 
