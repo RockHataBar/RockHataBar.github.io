@@ -463,6 +463,16 @@
     const navLinks = document.querySelectorAll('.chip');
     const navbarEl = document.querySelector('.navbar');
 
+    // Якщо натиснута вкладка виглядає лише наполовину (обрізана краєм
+    // панелі), докручуємо панель категорій так, щоб вона стала повністю
+    // видимою. block: 'nearest' не займає вертикальний скролл — той і так
+    // веде до розділу через звичайний перехід по #якір.
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        link.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+      });
+    });
+
     function getHeaderOffset() {
       return (navbarEl ? navbarEl.offsetHeight : 0) + 16;
     }
