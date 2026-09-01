@@ -12,209 +12,282 @@
     }
 
     :root {
-      --gold: #FFD700;
-      --bg: #000;
-      --text: #fff;
-      --secondary: #ccc;
-      --nav-bg: rgba(17, 17, 17, 0.95);
+      --gold: #f0c14b;
+      --bg: #0b0b0d;
+      --surface: #18181c;
+      --surface-2: #222227;
+      --text: #f5f5f2;
+      --secondary: #9a9aa0;
+      --nav-bg: rgba(12, 12, 14, 0.92);
     }
 
-    /* Исправление поведения адресной строки и плавный скролл */
+    * { box-sizing: border-box; }
+
     html {
       scroll-behavior: smooth;
-      scroll-padding-top: 85px; /* Высота липкой шапки */
-      height: 101%; /* Гарантирует наличие скролла для активации интерфейса браузера */
+      scroll-padding-top: 110px; /* высота липкої шапки + чипів */
+      height: 101%;
     }
 
-   * { box-sizing: border-box; }
-
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 100px; /* Увеличил, чтобы был запас */
-}
-
-body {
-  margin: 0;
-  padding: 0 0 60px 0; /* Убрал боковые отступы здесь */
-  background-color: var(--bg);
-  color: var(--gold);
-  font-family: 'Johnson', sans-serif;
-  overflow-x: hidden; /* Защита от горизонтального скролла всей страницы */
-}
-
-/* Контент ограничиваем отдельно, чтобы навигация была на всю ширину */
-h1, #menu-content {
-  padding: 0 20px;
-}
-
-.navbar {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  background: var(--nav-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-bottom: 1px solid #222;
-}
-
-.nav-center-brand {
-  text-align: center;
-  padding: 10px 0 5px 0;
-  font-size: 18px;
-  font-weight: bold;
-  letter-spacing: 3px;
-}
-.nav-center-brand a { color: var(--gold); text-decoration: none; }
-
-.nav-container {
-  display: flex;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 12px 20px;
-  gap: 20px; /* Увеличил расстояние для удобства нажатия пальцем */
-  align-items: center;
-
-  /* Скрываем скроллбар для всех браузеров */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
-}
-
-/* Скрываем скроллбар для Chrome/Safari */
-.nav-container::-webkit-scrollbar {
-  display: none;
-}
-
-.nav-container a {
-  display: inline-block; /* Чтобы padding и border работали корректно */
-  color: var(--gold);
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 14px;
-  white-space: nowrap;
-  letter-spacing: 1px;
-  transition: 0.3s;
-  padding-bottom: 8px; /* Чуть больше места для линии */
-  opacity: 0.7;
-}
-
-.nav-container a.active {
-  color: var(--text);
-  opacity: 1;
-  border-bottom: 2px solid var(--gold);
-}
-    /* 🍹 Стилизация продуктов */
-    h1 { text-align: center; font-size: 32px; letter-spacing: 3px; margin: 20px 0; }
-    h2 { border-bottom: 1px solid #333; padding-bottom: 8px; margin: 30px 0 15px 0; color: var(--text); font-size: 22px; text-transform: uppercase; }
-
-    .drink {
-      display: flex; justify-content: space-between; align-items: flex-start;
-      border-bottom: 1px solid #222; padding: 16px 0; gap: 12px;
+    body {
+      margin: 0;
+      padding: 0 0 40px 0;
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Johnson', 'Helvetica Neue', Arial, sans-serif;
+      overflow-x: hidden;
     }
 
-    .drink-info { flex: 1; }
-    .name { font-weight: bold; font-size: 17px; margin-bottom: 4px; color: var(--gold); text-transform: uppercase; }
-    .desc { color: var(--secondary); font-size: 13px; margin-bottom: 8px; line-height: 1.3; }
-    .volume-price { color: var(--text); font-size: 15px; font-weight: bold; white-space: nowrap; }
+    #menu-content { padding: 0 16px; max-width: 720px; margin: 0 auto; }
 
-    /* Фото продукта */
-    .drink-image { width: 85px; height: 85px; flex-shrink: 0; cursor: pointer; overflow: hidden; border-radius: 8px; border: 1px solid #333; }
-    .drink-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+    /* ================= ШАПКА ================= */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: var(--nav-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid #232326;
+    }
 
-    /* 🖼️ Модальное окно (Увеличение фото) */
+    .brand-header {
+      text-align: center;
+      padding: 16px 20px 10px;
+    }
+
+    .brand-name {
+      font-size: 22px;
+      font-weight: bold;
+      letter-spacing: 4px;
+      color: var(--gold);
+    }
+
+    .brand-tag {
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--secondary);
+      margin-top: 4px;
+      text-transform: uppercase;
+    }
+
+    /* ================= ЧІПИ-КАТЕГОРІЇ ================= */
+    .chips-bar {
+      display: flex;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      gap: 8px;
+      padding: 12px 16px 14px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .chips-bar::-webkit-scrollbar { display: none; }
+
+    .chip {
+      flex-shrink: 0;
+      display: inline-block;
+      color: var(--secondary);
+      background: var(--surface-2);
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      padding: 9px 18px;
+      border-radius: 999px;
+      transition: background 0.25s, color 0.25s;
+    }
+
+    .chip.active {
+      color: #14140f;
+      background: var(--gold);
+    }
+
+    /* ================= РОЗДІЛИ ================= */
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: bold;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--secondary);
+      margin: 30px 4px 12px;
+    }
+
+    .section-title::before {
+      content: '';
+      width: 14px;
+      height: 2px;
+      background: var(--gold);
+      display: inline-block;
+    }
+
+    section:first-of-type .section-title { margin-top: 6px; }
+
+    /* ================= КАРТКА ТОВАРУ ================= */
+    .item-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 12px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+    }
+
+    .item-info { flex: 1; min-width: 0; }
+
+    .item-name {
+      font-weight: bold;
+      font-size: 15px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .item-desc {
+      color: var(--secondary);
+      font-size: 12.5px;
+      line-height: 1.4;
+      margin: 4px 0 8px;
+    }
+
+    .item-footer {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .item-volume {
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--secondary);
+    }
+
+    .item-price {
+      font-weight: bold;
+      font-size: 15px;
+      color: var(--gold);
+    }
+
+    .item-photo {
+      width: 76px;
+      height: 76px;
+      flex-shrink: 0;
+      cursor: pointer;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+    .item-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* ================= МОДАЛКА ФОТО ================= */
     #modal {
       display: none; position: fixed; z-index: 2000; top: 0; left: 0;
       width: 100%; height: 100%; background: rgba(0,0,0,0.95);
       justify-content: center; align-items: center; cursor: zoom-out;
     }
-    #modal img { max-width: 90%; max-height: 80%; border-radius: 10px; border: 2px solid var(--gold); box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
+    #modal img { max-width: 90%; max-height: 80%; border-radius: 14px; border: 2px solid var(--gold); box-shadow: 0 0 20px rgba(240, 193, 75, 0.35); }
 
     @media (min-width: 768px) {
-      .nav-container { justify-content: center; }
-      .drink-image { width: 110px; height: 110px; }
+      .chips-bar { justify-content: center; }
+      .item-photo { width: 96px; height: 96px; }
     }
   </style>
 </head>
 <body id="top">
 
   <nav class="navbar">
-    <div class="nav-center-brand"><a href="#top">ROCK HATA</a></div>
-    <div class="nav-container">
-      <a href="#cocktails">Коктейлі</a>
-      <a href="#drinks">Напої</a>
-      <a href="#shots">Шоти</a>
-      <a href="#beer">Пиво</a>
-      <a href="#snacks">Снеки</a>
-      <a href="#nastoyanky">Настоянки</a>
-      <a href="#liqueurs">Лікери</a>
+    <div class="brand-header">
+      <a href="#top" style="text-decoration:none;">
+        <div class="brand-name">ROCK HATA</div>
+      </a>
+      <div class="brand-tag">Bar Menu</div>
+    </div>
+    <div class="chips-bar">
+      <a href="#cocktails" class="chip">Коктейлі</a>
+      <a href="#drinks" class="chip">Напої</a>
+      <a href="#shots" class="chip">Шоти</a>
+      <a href="#beer" class="chip">Пиво</a>
+      <a href="#snacks" class="chip">Снеки</a>
+      <a href="#nastoyanky" class="chip">Настоянки</a>
+      <a href="#liqueurs" class="chip">Лікери</a>
     </div>
   </nav>
 
-  <h1>МЕНЮ</h1>
-
   <div id="menu-content">
-    <section id="cocktails"><h2>Коктейлі</h2><div id="menu-cocktails"></div></section>
-    <section id="drinks"><h2>Напої</h2><div id="menu-drinks"></div></section>
-    <section id="beer"><h2>Пиво</h2><div id="menu-beer"></div></section>
-    <section id="shots"><h2>Шоти</h2><div id="menu-shots"></div></section>
-    <section id="snacks"><h2>Снеки</h2><div id="menu-snacks"></div></section>
-    <section id="nastoyanky"><h2>Настоянки</h2><div id="menu-nastoyanky"></div></section>
-    <section id="liqueurs"><h2>Лікери</h2><div id="menu-liqueurs"></div></section>
+    <section id="cocktails"><h2 class="section-title">Коктейлі</h2><div id="menu-cocktails"></div></section>
+    <section id="drinks"><h2 class="section-title">Напої</h2><div id="menu-drinks"></div></section>
+    <section id="beer"><h2 class="section-title">Пиво</h2><div id="menu-beer"></div></section>
+    <section id="shots"><h2 class="section-title">Шоти</h2><div id="menu-shots"></div></section>
+    <section id="snacks"><h2 class="section-title">Снеки</h2><div id="menu-snacks"></div></section>
+    <section id="nastoyanky"><h2 class="section-title">Настоянки</h2><div id="menu-nastoyanky"></div></section>
+    <section id="liqueurs"><h2 class="section-title">Лікери</h2><div id="menu-liqueurs"></div></section>
   </div>
 
-   <div id="modal" onclick="this.style.display='none'; document.body.style.overflow='auto'">      <img id="modal-img" src="" alt="View">
+  <div id="modal" onclick="this.style.display='none'; document.body.style.overflow='auto'">
+    <img id="modal-img" src="" alt="View">
   </div>
 
   <script src="menu-data.js"></script>
   <script>
     function openModal(src) {
-  const modal = document.getElementById('modal');
-  const modalImg = document.getElementById('modal-img');
-  modalImg.src = src;
-  modal.style.display = 'flex';
-  document.body.style.overflow = 'hidden';
+      const modal = document.getElementById('modal');
+      const modalImg = document.getElementById('modal-img');
+      modalImg.src = src;
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
     }
 
     function renderMenu(items, containerId) {
       const menuDiv = document.getElementById(containerId);
-      if(!menuDiv) return;
+      if (!menuDiv) return;
       items.forEach((drink) => {
-        const drinkDiv = document.createElement('div');
-        drinkDiv.className = 'drink';
+        const cardDiv = document.createElement('div');
+        cardDiv.className = 'item-card';
 
         const infoDiv = document.createElement('div');
-        infoDiv.className = 'drink-info';
+        infoDiv.className = 'item-info';
         infoDiv.innerHTML = `
-          <div class="name">${drink.name}</div>
-          ${drink.desc ? `<div class="desc">${drink.desc}</div>` : ''}
-          <div class="volume-price">${drink.volume ? drink.volume + ' — ' : ''}${drink.price}</div>
+          <div class="item-name">${drink.name}</div>
+          ${drink.desc ? `<div class="item-desc">${drink.desc}</div>` : ''}
+          <div class="item-footer">
+            ${drink.volume ? `<span class="item-volume">${drink.volume}</span>` : ''}
+            <span class="item-price">${drink.price}</span>
+          </div>
         `;
-
-        drinkDiv.appendChild(infoDiv);
+        cardDiv.appendChild(infoDiv);
 
         if (drink.img) {
-  const imgDiv = document.createElement('div');
-  imgDiv.className = 'drink-image';
-          imgDiv.onclick = () => openModal(drink.img);
-          imgDiv.innerHTML = `<img src="${drink.img}" alt="${drink.name}" loading="lazy">`;
-          drinkDiv.appendChild(imgDiv);
+          const photoDiv = document.createElement('div');
+          photoDiv.className = 'item-photo';
+          photoDiv.onclick = () => openModal(drink.img);
+          photoDiv.innerHTML = `<img src="${drink.img}" alt="${drink.name}" loading="lazy">`;
+          cardDiv.appendChild(photoDiv);
         }
-        menuDiv.appendChild(drinkDiv);
+
+        menuDiv.appendChild(cardDiv);
       });
     }
 
     Object.entries(menuData).forEach(([key, items]) => renderMenu(items, `menu-${key}`));
 
-    const sections = document.querySelectorAll("section");
-    const navLinks = document.querySelectorAll(".nav-container a");
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('.chip');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           navLinks.forEach(link => {
-            link.classList.toggle("active", link.getAttribute("href") === `#${entry.target.id}`);
+            link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`);
           });
         }
       });
-    }, { threshold: 0.3, rootMargin: "-10% 0px -70% 0px" });
+    }, { threshold: 0.3, rootMargin: '-10% 0px -70% 0px' });
     sections.forEach(section => observer.observe(section));
   </script>
 </body>
