@@ -14,10 +14,10 @@ const menuData = {
     { name: 'КРИВАВА МЕРІ', desc: 'ГОРІЛКА / ТОМАТНИЙ СІК / ТАБАСКО / ВУСТЕРСЬКИЙ СОУС / ЛАЙМ', volume: '150 МЛ', price: '80 ₴', img: '' }
   ],
   beer: [
-    { name: 'pivko', desc: 'smachne', volume: '500 МЛ', price: 'desheve ₴', img: '' },
-    { name: 'pivko', desc: 'smachne', volume: '500 МЛ', price: 'desheve ₴', img: '' },
-    { name: 'pivko', desc: 'smachne', volume: '500 МЛ', price: 'desheve ₴', img: '' },
-
+    { name: 'Dunkel', desc: '', volume: '500 МЛ', price: '80 ₴', img: '' },
+    { name: 'Staropramen ж/б', desc: '', volume: '500 МЛ', price: '80 ₴', img: '' },
+    { name: 'Львівське Фірмове', desc: '', volume: '500 МЛ', price: '80 ₴', img: '' },
+    { name: 'Blanche 1664 б/а', desc: '', volume: '300 МЛ', price: '80 ₴', img: '' }
   ],
   shots: [
     { name: 'ПАН ІВАН', desc: 'ГОРІЛКА / ЛИМОННИЙ СІК / ГРЕНАДИН', volume: '50 МЛ', price: '80 ₴', img: '' },
