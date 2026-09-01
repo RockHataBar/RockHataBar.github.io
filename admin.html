@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROCKHATA — Редагування меню</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --surface-color: #1e1e1e;
+            --primary-color: #d32f2f;
+            --text-main: #ffffff;
+            --text-muted: #aaaaaa;
+            --border-color: #333;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        h1, h2, h3, p { margin: 0; }
+
+        header {
+            max-width: 900px;
+            margin: 0 auto 20px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            margin-top: 8px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .toolbar {
+            max-width: 900px;
+            margin: 0 auto 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            font-family: inherit;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .btn-primary { background-color: var(--primary-color); color: #fff; }
+        .btn-secondary { background-color: var(--surface-color); color: var(--text-main); border: 1px solid var(--border-color); }
+        .btn-danger { background-color: transparent; color: var(--primary-color); border: 1px solid var(--primary-color); }
+        .btn-small { padding: 6px 10px; font-size: 12px; }
+
+        #status {
+            max-width: 900px;
+            margin: 0 auto 20px;
+            font-size: 13px;
+            color: var(--text-muted);
+            min-height: 18px;
+        }
+
+        .categories {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .category-card {
+            background-color: var(--surface-color);
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .category-head {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 3px;
+        }
+
+        input, textarea {
+            background-color: #2a2a2a;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-main);
+            padding: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .item-card {
+            background-color: #262626;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+
+        .item-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .item-grid .full { grid-column: 1 / -1; }
+
+        .item-foot {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
+        .add-item-btn { margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>ROCKHATA — Редагування меню</h1>
+        <p>
+            Локальний інструмент без сервера: правки зберігаються тільки в цьому браузері (чернетка),
+            поки ви не натиснете «Скачати menu-data.js» і не замінете файл у проєкті.
+            Джерело правди — файл <code>menu-data.js</code> в репозиторії.
+            Категорії відповідають розділам на сторінці <code>index.html</code> — тут можна
+            редагувати, додавати й видаляти лише товари всередині них.
+        </p>
+    </header>
+
+    <div class="toolbar">
+        <button class="btn-primary" id="downloadBtn">Скачати menu-data.js</button>
+        <button class="btn-danger" id="resetBtn">Скинути чернетку до файлу</button>
+    </div>
+
+    <div id="status"></div>
+
+    <div class="categories" id="categories"></div>
+
+    <script src="menu-data.js"></script>
+    <script>
+        const DRAFT_KEY = 'rockhata_menu_draft_v2';
+
+        // Порядок і підписи категорій відповідають розділам у index.html
+        const CATEGORY_ORDER = ['cocktails', 'drinks', 'beer', 'shots', 'snacks', 'nastoyanky', 'liqueurs'];
+        const CATEGORY_LABELS = {
+            cocktails: 'Коктейлі',
+            drinks: 'Напої',
+            beer: 'Пиво',
+            shots: 'Шоти',
+            snacks: 'Снеки',
+            nastoyanky: 'Настоянки',
+            liqueurs: 'Лікери'
+        };
+
+        let state = {};
+
+        function esc(str) {
+            return String(str === undefined || str === null ? '' : str)
+                .replace(/\\/g, '\\\\')
+                .replace(/'/g, "\\'");
+        }
+
+        function escapeAttr(value) {
+            return String(value === undefined || value === null ? '' : value).replace(/"/g, '&quot;');
+        }
+
+        function emptyState() {
+            const obj = {};
+            CATEGORY_ORDER.forEach(key => { obj[key] = []; });
+            return obj;
+        }
+
+        function normalize(data) {
+            const obj = emptyState();
+            CATEGORY_ORDER.forEach(key => {
+                if (Array.isArray(data[key])) obj[key] = JSON.parse(JSON.stringify(data[key]));
+            });
+            return obj;
+        }
+
+        function loadInitialState() {
+            const draft = localStorage.getItem(DRAFT_KEY);
+            if (draft) {
+                try {
+                    setStatus('Завантажено чернетку з цього браузера (ще не скачана).');
+                    return normalize(JSON.parse(draft));
+                } catch (e) { /* ignore corrupt draft */ }
+            }
+            return normalize(typeof menuData !== 'undefined' ? menuData : {});
+        }
+
+        function saveDraft() {
+            localStorage.setItem(DRAFT_KEY, JSON.stringify(state));
+            setStatus('Чернетку автозбережено в браузері о ' + new Date().toLocaleTimeString());
+        }
+
+        function setStatus(text) {
+            document.getElementById('status').textContent = text;
+        }
+
+        function render() {
+            const container = document.getElementById('categories');
+            container.innerHTML = '';
+
+            CATEGORY_ORDER.forEach((catKey) => {
+                const items = state[catKey];
+                const card = document.createElement('div');
+                card.className = 'category-card';
+
+                const head = document.createElement('div');
+                head.className = 'category-head';
+                head.textContent = CATEGORY_LABELS[catKey] || catKey;
+                card.appendChild(head);
+
+                items.forEach((item, itemIndex) => {
+                    const itemCard = document.createElement('div');
+                    itemCard.className = 'item-card';
+                    itemCard.innerHTML = `
+                        <div class="item-grid">
+                            <div class="field">
+                                <label>Назва</label>
+                                <input name="name" value="${escapeAttr(item.name)}">
+                            </div>
+                            <div class="field">
+                                <label>Ціна (з ₴)</label>
+                                <input name="price" value="${escapeAttr(item.price)}">
+                            </div>
+                            <div class="field">
+                                <label>Об'єм</label>
+                                <input name="volume" value="${escapeAttr(item.volume)}">
+                            </div>
+                            <div class="field">
+                                <label>Посилання на фото (URL або img/...)</label>
+                                <input name="img" value="${escapeAttr(item.img)}">
+                            </div>
+                            <div class="field full">
+                                <label>Опис</label>
+                                <input name="desc" value="${escapeAttr(item.desc)}">
+                            </div>
+                        </div>
+                        <div class="item-foot">
+                            <button class="btn-danger btn-small" data-action="del-item">Видалити товар</button>
+                        </div>
+                    `;
+                    itemCard.querySelector('[name="name"]').oninput = (e) => { item.name = e.target.value; saveDraft(); };
+                    itemCard.querySelector('[name="price"]').oninput = (e) => { item.price = e.target.value; saveDraft(); };
+                    itemCard.querySelector('[name="volume"]').oninput = (e) => { item.volume = e.target.value; saveDraft(); };
+                    itemCard.querySelector('[name="img"]').oninput = (e) => { item.img = e.target.value; saveDraft(); };
+                    itemCard.querySelector('[name="desc"]').oninput = (e) => { item.desc = e.target.value; saveDraft(); };
+                    itemCard.querySelector('[data-action="del-item"]').onclick = () => {
+                        items.splice(itemIndex, 1);
+                        saveDraft();
+                        render();
+                    };
+                    card.appendChild(itemCard);
+                });
+
+                const addItemBtn = document.createElement('button');
+                addItemBtn.className = 'btn-secondary btn-small add-item-btn';
+                addItemBtn.textContent = '+ Товар';
+                addItemBtn.onclick = () => {
+                    items.push({ name: '', desc: '', volume: '', price: '', img: '' });
+                    saveDraft();
+                    render();
+                };
+                card.appendChild(addItemBtn);
+
+                container.appendChild(card);
+            });
+        }
+
+        function generateMenuDataJs() {
+            const categoriesJs = CATEGORY_ORDER.map(catKey => {
+                const itemsJs = state[catKey].map(item => (
+                    `    { name: '${esc(item.name)}', desc: '${esc(item.desc)}', volume: '${esc(item.volume)}', price: '${esc(item.price)}', img: '${esc(item.img)}' }`
+                )).join(',\n');
+                return `  ${catKey}: [\n${itemsJs}\n  ]`;
+            }).join(',\n');
+
+            return `const menuData = {\n${categoriesJs}\n};\n`;
+        }
+
+        document.getElementById('resetBtn').onclick = () => {
+            if (confirm('Скинути всі незбережені правки і завантажити меню заново з menu-data.js?')) {
+                localStorage.removeItem(DRAFT_KEY);
+                state = normalize(typeof menuData !== 'undefined' ? menuData : {});
+                setStatus('Чернетку скинуто, завантажено поточний menu-data.js.');
+                render();
+            }
+        };
+
+        document.getElementById('downloadBtn').onclick = () => {
+            const content = generateMenuDataJs();
+            const blob = new Blob([content], { type: 'text/javascript' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'menu-data.js';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            setStatus('Файл menu-data.js скачано. Замініть ним файл у проєкті і закомітьте.');
+        };
+
+        state = loadInitialState();
+        render();
+    </script>
+</body>
+</html>
