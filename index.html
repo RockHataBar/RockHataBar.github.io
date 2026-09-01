@@ -376,7 +376,10 @@
     </svg>
   </a>
 
-  <script src="menu-data.js"></script>
+  <!-- Версія у query-параметрі — щоб мобільний Safari та GitHub Pages CDN
+       не віддавали закешовану стару версію файлу після зміни меню.
+       Змінюйте цей номер щоразу, коли редагуєте menu-data.js. -->
+  <script src="menu-data.js?v=20260901"></script>
   <script>
     const VOLUME_ICON = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l-1.5 15a2 2 0 0 1-2 1.8h-5a2 2 0 0 1-2-1.8L6 3Z"/><path d="M5 3h14"/></svg>`;
 
