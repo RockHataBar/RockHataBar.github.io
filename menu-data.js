@@ -1,6 +1,6 @@
 const menuData = {
   cocktails: [
-    { name: 'ГРАНАТОВИЙ ВІСКІ САУРЕР', desc: 'ВІСКІ / СИРОП ГРАНАТ / СІК ГРАНАТ / ЛИМОННИЙ ФРЕШ', volume: '150 МЛ', price: '180 ₴', img: 'img/whisky_sauer.jpg' },
+    { name: 'ГРАНАТОВИЙ ВІСКІ САУРЕР', desc: 'ВІСКІ / СИРОП ГРАНАТ / СІК ГРАНАТ / ЛИМОННИЙ ФРЕШ', volume: '150 МЛ', price: '180 ₴', img: '' },
     { name: 'CHERRY IVANSON', desc: 'ЗОЛОТИЙ РОМ / СИРОП ВИШНЯ / СІК ВИШНЯ / ЛИМОННИЙ ФРЕШ', volume: '150 МЛ', price: '180 ₴', img: '' },
     { name: 'ДЖИН & ТОНІК', desc: 'ДЖИН / ТОНІК / ЛАЙМ', volume: '150 МЛ', price: '100 ₴', img: '' },
     { name: 'ТЕКІЛА САНРАЙЗ', desc: 'ТЕКІЛА / АПЕЛЬСИНОВИЙ СІК / ГРЕНАДИН', volume: '150 МЛ', price: '120 ₴', img: '' },
@@ -14,9 +14,9 @@ const menuData = {
     { name: 'КРИВАВА МЕРІ', desc: 'ГОРІЛКА / ТОМАТНИЙ СІК / ТАБАСКО / ВУСТЕРСЬКИЙ СОУС / ЛАЙМ', volume: '150 МЛ', price: '80 ₴', img: '' }
   ],
   beer: [
-    { name: 'pivko', desc: 'smachne', volume: '500 МЛ', price: 'desheve ₴', img: 'img/pivko.jpg' },
-    { name: 'pivko', desc: 'smachne', volume: '500 МЛ', price: 'desheve ₴', img: 'img/pivko.jpg' },
-    { name: 'pivko', desc: 'smachne', volume: '500 МЛ', price: 'desheve ₴', img: 'img/pivko.jpg' },
+    { name: 'pivko', desc: 'smachne', volume: '500 МЛ', price: 'desheve ₴', img: '' },
+    { name: 'pivko', desc: 'smachne', volume: '500 МЛ', price: 'desheve ₴', img: '' },
+    { name: 'pivko', desc: 'smachne', volume: '500 МЛ', price: 'desheve ₴', img: '' },
 
   ],
   shots: [
