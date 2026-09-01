@@ -99,10 +99,16 @@
     .brand-hours.is-open .status-text { color: var(--status-open); }
 
     /* ================= ЧІПИ-КАТЕГОРІЇ ================= */
+    .chips-wrap {
+      position: relative;
+    }
+
     .chips-bar {
       display: flex;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x proximity;
+      scroll-padding-left: 16px;
       gap: 18px;
       padding: 10px 16px 14px;
       scrollbar-width: none;
@@ -110,9 +116,46 @@
     }
     .chips-bar::-webkit-scrollbar { display: none; }
 
+    /* Затемнення + стрілка по краях панелі категорій — підказка, що
+       список можна прокрутити далі (як в Instagram/Google Maps/Uber Eats).
+       Плоский градієнт тут майже не видно (фон і так чорний), тому
+       головний акцент — золота стрілка, а не сама тінь. */
+    .chips-fade {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 34px;
+      display: flex;
+      align-items: center;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s;
+      z-index: 1;
+    }
+    .chips-fade-left {
+      left: 0;
+      justify-content: flex-start;
+      padding-left: 4px;
+      background: linear-gradient(to right, var(--nav-bg) 45%, transparent);
+    }
+    .chips-fade-right {
+      right: 0;
+      justify-content: flex-end;
+      padding-right: 4px;
+      background: linear-gradient(to left, var(--nav-bg) 45%, transparent);
+    }
+    .chips-fade svg {
+      width: 16px;
+      height: 16px;
+      color: var(--gold);
+    }
+    .chips-wrap.show-left .chips-fade-left { opacity: 1; }
+    .chips-wrap.show-right .chips-fade-right { opacity: 1; }
+
     .chip {
       flex-shrink: 0;
       display: inline-block;
+      scroll-snap-align: start;
       color: var(--gold-dim);
       text-decoration: none;
       font-weight: bold;
@@ -258,14 +301,22 @@
         <span>· Щодня 16:00–23:00</span>
       </div>
     </div>
-    <div class="chips-bar">
-      <a href="#cocktails" class="chip">Коктейлі</a>
-      <a href="#drinks" class="chip">Напої</a>
-      <a href="#beer" class="chip">Пиво</a>
-      <a href="#shots" class="chip">Шоти</a>
-      <a href="#snacks" class="chip">Снеки</a>
-      <a href="#nastoyanky" class="chip">Настоянки</a>
-      <a href="#liqueurs" class="chip">Лікери</a>
+    <div class="chips-wrap" id="chipsWrap">
+      <div class="chips-bar" id="chipsBar">
+        <a href="#cocktails" class="chip">Коктейлі</a>
+        <a href="#drinks" class="chip">Напої</a>
+        <a href="#beer" class="chip">Пиво</a>
+        <a href="#shots" class="chip">Шоти</a>
+        <a href="#snacks" class="chip">Снеки</a>
+        <a href="#nastoyanky" class="chip">Настоянки</a>
+        <a href="#liqueurs" class="chip">Лікери</a>
+      </div>
+      <div class="chips-fade chips-fade-left">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </div>
+      <div class="chips-fade chips-fade-right">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
     </div>
   </nav>
 
@@ -335,6 +386,24 @@
     }
 
     Object.entries(menuData).forEach(([key, items]) => renderMenu(items, `menu-${key}`));
+
+    // Підказка, що панель категорій прокручується далі за межі екрана:
+    // затемнення з того краю, куди ще можна прокрутити.
+    const chipsWrap = document.getElementById('chipsWrap');
+    const chipsBar = document.getElementById('chipsBar');
+
+    function updateChipsFade() {
+      if (!chipsWrap || !chipsBar) return;
+      const maxScroll = chipsBar.scrollWidth - chipsBar.clientWidth;
+      chipsWrap.classList.toggle('show-left', chipsBar.scrollLeft > 4);
+      chipsWrap.classList.toggle('show-right', chipsBar.scrollLeft < maxScroll - 4);
+    }
+
+    if (chipsBar) {
+      chipsBar.addEventListener('scroll', updateChipsFade, { passive: true });
+      window.addEventListener('resize', updateChipsFade);
+      updateChipsFade();
+    }
 
     // Графік роботи: без вихідних, 16:00–23:00 щодня.
     const OPEN_HOUR = 16;
