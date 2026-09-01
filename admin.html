@@ -83,14 +83,10 @@
         }
 
         .category-head {
-            display: flex;
-            gap: 10px;
-            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
             margin-bottom: 15px;
         }
-
-        .category-head input[name="title"] { flex-grow: 1; font-size: 18px; font-weight: bold; }
-        .category-head input[name="id"] { width: 110px; color: var(--text-muted); }
 
         label {
             display: block;
@@ -132,8 +128,6 @@
             margin-top: 10px;
         }
 
-        .field { margin-bottom: 0; }
-
         .add-item-btn { margin-top: 5px; }
     </style>
 </head>
@@ -145,12 +139,13 @@
             Локальний інструмент без сервера: правки зберігаються тільки в цьому браузері (чернетка),
             поки ви не натиснете «Скачати menu-data.js» і не замінете файл у проєкті.
             Джерело правди — файл <code>menu-data.js</code> в репозиторії.
+            Категорії відповідають розділам на сторінці <code>index.html</code> — тут можна
+            редагувати, додавати й видаляти лише товари всередині них.
         </p>
     </header>
 
     <div class="toolbar">
         <button class="btn-primary" id="downloadBtn">Скачати menu-data.js</button>
-        <button class="btn-secondary" id="addCategoryBtn">+ Категорія</button>
         <button class="btn-danger" id="resetBtn">Скинути чернетку до файлу</button>
     </div>
 
@@ -160,8 +155,21 @@
 
     <script src="menu-data.js"></script>
     <script>
-        const DRAFT_KEY = 'rockhata_menu_draft_v1';
-        let state = [];
+        const DRAFT_KEY = 'rockhata_menu_draft_v2';
+
+        // Порядок і підписи категорій відповідають розділам у index.html
+        const CATEGORY_ORDER = ['cocktails', 'drinks', 'beer', 'shots', 'snacks', 'nastoyanky', 'liqueurs'];
+        const CATEGORY_LABELS = {
+            cocktails: 'Коктейлі',
+            drinks: 'Напої',
+            beer: 'Пиво',
+            shots: 'Шоти',
+            snacks: 'Снеки',
+            nastoyanky: 'Настоянки',
+            liqueurs: 'Лікери'
+        };
+
+        let state = {};
 
         function esc(str) {
             return String(str === undefined || str === null ? '' : str)
@@ -169,8 +177,22 @@
                 .replace(/'/g, "\\'");
         }
 
-        function uid(prefix) {
-            return prefix + Math.random().toString(36).slice(2, 7);
+        function escapeAttr(value) {
+            return String(value === undefined || value === null ? '' : value).replace(/"/g, '&quot;');
+        }
+
+        function emptyState() {
+            const obj = {};
+            CATEGORY_ORDER.forEach(key => { obj[key] = []; });
+            return obj;
+        }
+
+        function normalize(data) {
+            const obj = emptyState();
+            CATEGORY_ORDER.forEach(key => {
+                if (Array.isArray(data[key])) obj[key] = JSON.parse(JSON.stringify(data[key]));
+            });
+            return obj;
         }
 
         function loadInitialState() {
@@ -178,10 +200,10 @@
             if (draft) {
                 try {
                     setStatus('Завантажено чернетку з цього браузера (ще не скачана).');
-                    return JSON.parse(draft);
+                    return normalize(JSON.parse(draft));
                 } catch (e) { /* ignore corrupt draft */ }
             }
-            return JSON.parse(JSON.stringify(typeof menuData !== 'undefined' ? menuData : []));
+            return normalize(typeof menuData !== 'undefined' ? menuData : {});
         }
 
         function saveDraft() {
@@ -197,33 +219,17 @@
             const container = document.getElementById('categories');
             container.innerHTML = '';
 
-            state.forEach((category, catIndex) => {
+            CATEGORY_ORDER.forEach((catKey) => {
+                const items = state[catKey];
                 const card = document.createElement('div');
                 card.className = 'category-card';
 
                 const head = document.createElement('div');
                 head.className = 'category-head';
-                head.innerHTML = `
-                    <input name="title" value="${escapeAttr(category.title)}" placeholder="Назва категорії">
-                    <input name="id" value="${escapeAttr(category.id)}" placeholder="id">
-                `;
-                const delCatBtn = document.createElement('button');
-                delCatBtn.className = 'btn-danger btn-small';
-                delCatBtn.textContent = 'Видалити категорію';
-                delCatBtn.onclick = () => {
-                    if (confirm(`Видалити категорію "${category.title}" разом з усіма товарами?`)) {
-                        state.splice(catIndex, 1);
-                        saveDraft();
-                        render();
-                    }
-                };
-                head.appendChild(delCatBtn);
+                head.textContent = CATEGORY_LABELS[catKey] || catKey;
                 card.appendChild(head);
 
-                head.querySelector('[name="title"]').oninput = (e) => { category.title = e.target.value; saveDraft(); };
-                head.querySelector('[name="id"]').oninput = (e) => { category.id = e.target.value; saveDraft(); };
-
-                category.items.forEach((item, itemIndex) => {
+                items.forEach((item, itemIndex) => {
                     const itemCard = document.createElement('div');
                     itemCard.className = 'item-card';
                     itemCard.innerHTML = `
@@ -233,20 +239,20 @@
                                 <input name="name" value="${escapeAttr(item.name)}">
                             </div>
                             <div class="field">
-                                <label>Ціна, ₴</label>
-                                <input name="price" type="number" value="${escapeAttr(item.price)}">
+                                <label>Ціна (з ₴)</label>
+                                <input name="price" value="${escapeAttr(item.price)}">
+                            </div>
+                            <div class="field">
+                                <label>Об'єм</label>
+                                <input name="volume" value="${escapeAttr(item.volume)}">
+                            </div>
+                            <div class="field">
+                                <label>Посилання на фото (URL або img/...)</label>
+                                <input name="img" value="${escapeAttr(item.img)}">
                             </div>
                             <div class="field full">
                                 <label>Опис</label>
                                 <input name="desc" value="${escapeAttr(item.desc)}">
-                            </div>
-                            <div class="field full">
-                                <label>Посилання на фото (URL)</label>
-                                <input name="img" value="${escapeAttr(item.img)}">
-                            </div>
-                            <div class="field">
-                                <label>id товару</label>
-                                <input name="id" value="${escapeAttr(item.id)}">
                             </div>
                         </div>
                         <div class="item-foot">
@@ -254,12 +260,12 @@
                         </div>
                     `;
                     itemCard.querySelector('[name="name"]').oninput = (e) => { item.name = e.target.value; saveDraft(); };
-                    itemCard.querySelector('[name="price"]').oninput = (e) => { item.price = Number(e.target.value) || 0; saveDraft(); };
-                    itemCard.querySelector('[name="desc"]').oninput = (e) => { item.desc = e.target.value; saveDraft(); };
+                    itemCard.querySelector('[name="price"]').oninput = (e) => { item.price = e.target.value; saveDraft(); };
+                    itemCard.querySelector('[name="volume"]').oninput = (e) => { item.volume = e.target.value; saveDraft(); };
                     itemCard.querySelector('[name="img"]').oninput = (e) => { item.img = e.target.value; saveDraft(); };
-                    itemCard.querySelector('[name="id"]').oninput = (e) => { item.id = e.target.value; saveDraft(); };
+                    itemCard.querySelector('[name="desc"]').oninput = (e) => { item.desc = e.target.value; saveDraft(); };
                     itemCard.querySelector('[data-action="del-item"]').onclick = () => {
-                        category.items.splice(itemIndex, 1);
+                        items.splice(itemIndex, 1);
                         saveDraft();
                         render();
                     };
@@ -270,7 +276,7 @@
                 addItemBtn.className = 'btn-secondary btn-small add-item-btn';
                 addItemBtn.textContent = '+ Товар';
                 addItemBtn.onclick = () => {
-                    category.items.push({ id: uid('item_'), name: '', desc: '', price: 0, img: '' });
+                    items.push({ name: '', desc: '', volume: '', price: '', img: '' });
                     saveDraft();
                     render();
                 };
@@ -280,31 +286,21 @@
             });
         }
 
-        function escapeAttr(value) {
-            return String(value === undefined || value === null ? '' : value).replace(/"/g, '&quot;');
-        }
-
         function generateMenuDataJs() {
-            const categoriesJs = state.map(category => {
-                const itemsJs = category.items.map(item => (
-                    `            { id: '${esc(item.id)}', name: '${esc(item.name)}', desc: '${esc(item.desc)}', price: ${Number(item.price) || 0}, img: '${esc(item.img)}' }`
+            const categoriesJs = CATEGORY_ORDER.map(catKey => {
+                const itemsJs = state[catKey].map(item => (
+                    `    { name: '${esc(item.name)}', desc: '${esc(item.desc)}', volume: '${esc(item.volume)}', price: '${esc(item.price)}', img: '${esc(item.img)}' }`
                 )).join(',\n');
-                return `    {\n        id: '${esc(category.id)}',\n        title: '${esc(category.title)}',\n        items: [\n${itemsJs}\n        ]\n    }`;
+                return `  ${catKey}: [\n${itemsJs}\n  ]`;
             }).join(',\n');
 
-            return `// ================= БАЗА ДАНИХ МЕНЮ =================\n// Заповніть вашими реальними позиціями\nconst menuData = [\n${categoriesJs}\n];\n`;
+            return `const menuData = {\n${categoriesJs}\n};\n`;
         }
-
-        document.getElementById('addCategoryBtn').onclick = () => {
-            state.push({ id: uid('cat_'), title: 'Нова категорія', items: [] });
-            saveDraft();
-            render();
-        };
 
         document.getElementById('resetBtn').onclick = () => {
             if (confirm('Скинути всі незбережені правки і завантажити меню заново з menu-data.js?')) {
                 localStorage.removeItem(DRAFT_KEY);
-                state = JSON.parse(JSON.stringify(typeof menuData !== 'undefined' ? menuData : []));
+                state = normalize(typeof menuData !== 'undefined' ? menuData : {});
                 setStatus('Чернетку скинуто, завантажено поточний menu-data.js.');
                 render();
             }
