@@ -367,7 +367,7 @@
       padding: 6px 0;
       position: sticky;
       z-index: 10;
-      background: var(--bg);
+      background: transparent;
     }
 
     .subgroup-chip {
@@ -1350,6 +1350,12 @@
           panel.classList.add('active', direction === 'right' ? 'slide-from-right' : 'slide-from-left');
         }
       });
+
+      // Списки Лонги/Шоти різної довжини — якщо не піднятись нагору розділу,
+      // та сама позиція скролу може опинитись вже за межами коротшого списку
+      // (і показати наступний розділ "Пиво" замість щойно обраної вкладки).
+      const cocktailsSection = document.getElementById('cocktails');
+      if (cocktailsSection) cocktailsSection.scrollIntoView({ block: 'start', behavior: 'smooth' });
     }
 
     let ticking = false;
