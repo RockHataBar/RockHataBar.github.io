@@ -156,6 +156,56 @@
       color: var(--gold);
     }
 
+    /* ================= АНОНС ================= */
+    .announce-banner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 14px 16px 4px;
+      padding: 8px;
+      border: 1px solid var(--gold-dim);
+      border-radius: 12px;
+      background: rgba(230, 185, 62, 0.06);
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+
+    .announce-banner:hover,
+    .announce-banner:active {
+      background: rgba(230, 185, 62, 0.12);
+    }
+
+    .announce-banner img {
+      width: 56px;
+      height: 56px;
+      border-radius: 8px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .announce-banner .announce-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .announce-banner .announce-label {
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .announce-banner .announce-title {
+      font-size: 14px;
+      color: #fff;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
     /* ================= ЧІПИ-КАТЕГОРІЇ ================= */
     .chips-wrap {
       position: relative;
@@ -424,6 +474,23 @@
         <span>м. Миколаїв, вул. Захисників Миколаєва 38/1</span>
       </a>
     </div>
+
+    <!--
+      АНОНС: щоб оновити подію — замініть href на посилання на пост в Instagram,
+      картинку img/announce.jpg на афішу, і текст в .announce-title.
+      Щоб приховати банер, коли анонсів немає — додайте style="display:none" до <a class="announce-banner">.
+    -->
+    <a class="announce-banner"
+       href="https://www.instagram.com/rockhatabar/"
+       target="_blank" rel="noopener"
+       aria-label="Анонс концерту">
+      <img src="img/announce.jpg" alt="Анонс">
+      <div class="announce-text">
+        <span class="announce-label">Анонс</span>
+        <span class="announce-title">Назва події — дата</span>
+      </div>
+    </a>
+
     <div class="chips-wrap" id="chipsWrap">
       <div class="chips-bar" id="chipsBar">
         <a href="#cocktails" class="chip">Коктейлі</a>
