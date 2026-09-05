@@ -354,32 +354,48 @@
 
     section:first-of-type .section-title { margin-top: 4px; }
 
-    /* Локальна навігація підгруп всередині розділу (напр. Лонги/Шоти
-       в "Коктейлі") — той самий принцип, що й головні чіпси, лише менше
-       і без прокрутки, бо підгруп завжди мало. */
+    /* Локальний перемикач вкладок всередині розділу (напр. Лонги/Шоти
+       в "Коктейлі"). "Липкий" (sticky) — щоб залишався в полі зору, коли
+       гортаєш довгий список, і можна було перемкнутись, не скролячи
+       назад нагору. Відступ top виставляється в JS (updateSubnavOffset),
+       бо висота головної шапки змінюється (згортання банера анонсу). */
     .subgroup-nav {
       display: flex;
       justify-content: center;
       gap: 10px;
       margin: 0 4px 8px;
+      padding: 6px 0;
+      position: sticky;
+      z-index: 10;
+      background: var(--bg);
     }
 
     .subgroup-chip {
       color: var(--gold-dim);
+      background: transparent;
       text-decoration: none;
+      font-family: inherit;
       font-weight: bold;
       font-size: 12px;
       letter-spacing: 0.4px;
       padding: 6px 16px;
       border-radius: 999px;
       border: 1px solid var(--gold-dim);
+      cursor: pointer;
       transition: background 0.2s, color 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
     }
 
     .subgroup-chip:hover,
     .subgroup-chip:active {
       background: rgba(230, 185, 62, 0.12);
-      color: #fff;
+    }
+
+    .subgroup-chip.active {
+      color: #14140f;
+      background: var(--gold);
+      border-color: var(--gold);
     }
 
     .subgroup-title {
@@ -391,6 +407,20 @@
       text-align: center;
       margin: 20px 4px 6px;
     }
+
+    .subgroup-panel { display: none; }
+    .subgroup-panel.active { display: block; }
+
+    @keyframes subgroupSlideFromRight {
+      from { opacity: 0; transform: translateX(28px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes subgroupSlideFromLeft {
+      from { opacity: 0; transform: translateX(-28px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .subgroup-panel.active.slide-from-right { animation: subgroupSlideFromRight 0.25s ease; }
+    .subgroup-panel.active.slide-from-left { animation: subgroupSlideFromLeft 0.25s ease; }
 
     /* ================= РЯДОК ТОВАРУ ================= */
     .item-row {
@@ -860,14 +890,18 @@
   <div id="menu-content">
     <section id="cocktails">
       <h2 class="section-title">Коктейлі</h2>
-      <div class="subgroup-nav">
-        <a href="#cocktails-longs" class="subgroup-chip">Лонги</a>
-        <a href="#cocktails-shots" class="subgroup-chip">Шоти</a>
+      <div class="subgroup-nav" id="cocktailSubnav">
+        <button type="button" class="subgroup-chip active" data-tab="longs" onclick="switchCocktailTab('longs')">Лонги</button>
+        <button type="button" class="subgroup-chip" data-tab="shots" onclick="switchCocktailTab('shots')">Шоти</button>
       </div>
-      <h3 id="cocktails-longs" class="subgroup-title">Лонги</h3>
-      <div class="items-list" id="menu-cocktails"></div>
-      <h3 id="cocktails-shots" class="subgroup-title">Шоти</h3>
-      <div class="items-list" id="menu-shots"></div>
+      <div class="subgroup-panel active" data-tab-panel="longs">
+        <h3 class="subgroup-title">Лонги</h3>
+        <div class="items-list" id="menu-cocktails"></div>
+      </div>
+      <div class="subgroup-panel" data-tab-panel="shots">
+        <h3 class="subgroup-title">Шоти</h3>
+        <div class="items-list" id="menu-shots"></div>
+      </div>
     </section>
     <!-- <section id="drinks"><h2 class="section-title">Напої</h2><div class="items-list" id="menu-drinks"></div></section> -->
     <section id="beer"><h2 class="section-title">Пиво</h2><div class="items-list" id="menu-beer"></div></section>
@@ -1248,6 +1282,14 @@
       document.documentElement.style.scrollPaddingTop = getHeaderOffset() + 'px';
     }
 
+    // Липка навігація підгруп (Лонги/Шоти) має прилипати одразу під
+    // головною шапкою — а не під верхом екрана, інакше вона перекриє
+    // головні чіпси категорій. Відступ той самий, що й для скролу.
+    function updateSubnavOffset() {
+      const subnav = document.getElementById('cocktailSubnav');
+      if (subnav) subnav.style.top = getHeaderOffset() + 'px';
+    }
+
     function updateActiveChip() {
       const scrollPos = window.scrollY + getHeaderOffset() + 1;
       let currentId = sections[0] && sections[0].id;
@@ -1285,6 +1327,29 @@
     function updateAnnounceVisibility() {
       if (!announceBanner) return;
       announceBanner.classList.toggle('collapsed', window.scrollY > ANNOUNCE_HIDE_THRESHOLD);
+      updateSubnavOffset();
+    }
+
+    // Перемикання вкладок Лонги/Шоти всередині розділу "Коктейлі".
+    // Показуємо лише одну панель, друга анімовано "заїжджає" збоку —
+    // напрямок залежить від того, яка вкладка лівіше в навігації.
+    const COCKTAIL_TAB_ORDER = ['longs', 'shots'];
+    function switchCocktailTab(tab) {
+      const current = document.querySelector('.subgroup-panel.active');
+      const currentTab = current ? current.dataset.tabPanel : null;
+      if (currentTab === tab) return;
+
+      const direction = COCKTAIL_TAB_ORDER.indexOf(tab) > COCKTAIL_TAB_ORDER.indexOf(currentTab) ? 'right' : 'left';
+
+      document.querySelectorAll('.subgroup-chip').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tab);
+      });
+      document.querySelectorAll('.subgroup-panel').forEach(panel => {
+        panel.classList.remove('active', 'slide-from-right', 'slide-from-left');
+        if (panel.dataset.tabPanel === tab) {
+          panel.classList.add('active', direction === 'right' ? 'slide-from-right' : 'slide-from-left');
+        }
+      });
     }
 
     let ticking = false;
@@ -1296,11 +1361,12 @@
     }
 
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', () => { updateScrollPadding(); updateActiveChip(); });
+    window.addEventListener('resize', () => { updateScrollPadding(); updateActiveChip(); updateSubnavOffset(); });
 
     updateScrollPadding();
     updateActiveChip();
     updateAnnounceVisibility();
+    updateSubnavOffset();
 
     // Esc закриває будь-яку відкриту модалку (фото товару, афіша анонсу, підбір напою).
     window.addEventListener('keydown', (e) => {
