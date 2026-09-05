@@ -539,12 +539,15 @@
 
     <!--
       АНОНС: щоб оновити подію — замініть href на посилання на пост в Instagram,
-      картинку img/announce.jpg на афішу, і текст в .announce-title.
-      Щоб приховати банер, коли анонсів немає — додайте style="display:none" до <a class="announce-banner">.
+      картинку img/announce.jpg на афішу, текст в .announce-title і дату в
+      data-event-date (формат РРРР-ММ-ДД — дата самої події). Банер сам
+      зникне, коли настане наступний день після цієї дати.
+      Щоб приховати банер прямо зараз — додайте style="display:none" до <a class="announce-banner">.
     -->
     <a class="announce-banner"
        href="https://www.instagram.com/p/DceTkTQsueA/?igsi=MXF3d3F1dWF6bzBi"
        target="_blank" rel="noopener"
+       data-event-date="2026-09-05"
        aria-label="Анонс концерту YOUTHEX — Alter Ego Tour">
       <img src="img/announce.jpg" alt="Анонс: YOUTHEX — Alter Ego Tour">
       <div class="announce-text">
@@ -775,8 +778,21 @@
     // Ховаємо анонс, коли відвідувач починає гортати меню — інакше "липка"
     // шапка з анонсом займає забагато екрана. При поверненні нагору анонс
     // з'являється знову.
-    const announceBanner = document.querySelector('.announce-banner');
+    let announceBanner = document.querySelector('.announce-banner');
     const ANNOUNCE_HIDE_THRESHOLD = 8;
+
+    // Подія минула — банер більше не потрібен: прибираємо його з сторінки
+    // назавжди (порівнюємо тільки дату, банер зникає з настанням наступного
+    // дня після data-event-date).
+    if (announceBanner && announceBanner.dataset.eventDate) {
+      const eventDay = new Date(announceBanner.dataset.eventDate + 'T00:00:00');
+      const dayAfterEvent = new Date(eventDay);
+      dayAfterEvent.setDate(dayAfterEvent.getDate() + 1);
+      if (new Date() >= dayAfterEvent) {
+        announceBanner.remove();
+        announceBanner = null;
+      }
+    }
 
     function updateAnnounceVisibility() {
       if (!announceBanner) return;
