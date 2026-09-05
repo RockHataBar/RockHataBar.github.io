@@ -354,6 +354,44 @@
 
     section:first-of-type .section-title { margin-top: 4px; }
 
+    /* Локальна навігація підгруп всередині розділу (напр. Лонги/Шоти
+       в "Коктейлі") — той самий принцип, що й головні чіпси, лише менше
+       і без прокрутки, бо підгруп завжди мало. */
+    .subgroup-nav {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 0 4px 8px;
+    }
+
+    .subgroup-chip {
+      color: var(--gold-dim);
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 12px;
+      letter-spacing: 0.4px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--gold-dim);
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .subgroup-chip:hover,
+    .subgroup-chip:active {
+      background: rgba(230, 185, 62, 0.12);
+      color: #fff;
+    }
+
+    .subgroup-title {
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-align: center;
+      margin: 20px 4px 6px;
+    }
+
     /* ================= РЯДОК ТОВАРУ ================= */
     .item-row {
       display: flex;
@@ -796,7 +834,6 @@
         <a href="#drinks" class="chip">Напої</a>
         -->
         <a href="#beer" class="chip">Пиво</a>
-        <a href="#shots" class="chip">Шоти</a>
         <a href="#snacks" class="chip">Снеки</a>
         <a href="#nastoyanky" class="chip">Настоянки</a>
         <a href="#liqueurs" class="chip">Лікери</a>
@@ -821,10 +858,19 @@
   </button>
 
   <div id="menu-content">
-    <section id="cocktails"><h2 class="section-title">Коктейлі</h2><div class="items-list" id="menu-cocktails"></div></section>
+    <section id="cocktails">
+      <h2 class="section-title">Коктейлі</h2>
+      <div class="subgroup-nav">
+        <a href="#cocktails-longs" class="subgroup-chip">Лонги</a>
+        <a href="#cocktails-shots" class="subgroup-chip">Шоти</a>
+      </div>
+      <h3 id="cocktails-longs" class="subgroup-title">Лонги</h3>
+      <div class="items-list" id="menu-cocktails"></div>
+      <h3 id="cocktails-shots" class="subgroup-title">Шоти</h3>
+      <div class="items-list" id="menu-shots"></div>
+    </section>
     <!-- <section id="drinks"><h2 class="section-title">Напої</h2><div class="items-list" id="menu-drinks"></div></section> -->
     <section id="beer"><h2 class="section-title">Пиво</h2><div class="items-list" id="menu-beer"></div></section>
-    <section id="shots"><h2 class="section-title">Шоти</h2><div class="items-list" id="menu-shots"></div></section>
     <section id="snacks"><h2 class="section-title">Снеки</h2><div class="items-list" id="menu-snacks"></div></section>
     <section id="nastoyanky"><h2 class="section-title">Настоянки</h2><div class="items-list" id="menu-nastoyanky"></div></section>
     <section id="liqueurs"><h2 class="section-title">Лікери</h2><div class="items-list" id="menu-liqueurs"></div></section>
