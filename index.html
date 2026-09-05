@@ -485,6 +485,124 @@
       color: var(--secondary);
     }
 
+    /* ================= ПІДБІР НАПОЮ ЗА НАСТРОЄМ ================= */
+    .mood-cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: calc(100% - 32px);
+      max-width: 600px;
+      margin: 16px auto;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--gold);
+      background: rgba(230, 185, 62, 0.08);
+      color: var(--gold);
+      font: inherit;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      box-sizing: border-box;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .mood-cta:hover, .mood-cta:active { background: rgba(230, 185, 62, 0.15); }
+    .mood-cta svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+    #moodModal {
+      display: none; position: fixed; z-index: 2100; top: 0; left: 0;
+      width: 100%; height: 100%; background: rgba(0,0,0,0.95);
+      justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;
+      overflow-y: auto;
+    }
+
+    .mood-modal-content {
+      width: 100%;
+      max-width: 380px;
+      background: #14140f;
+      border: 1px solid var(--gold-dim);
+      border-radius: 16px;
+      padding: 24px 20px;
+      box-sizing: border-box;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .mood-step { display: none; }
+    .mood-step.active { display: block; }
+
+    .mood-modal-question {
+      color: #fff;
+      font-size: 17px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .mood-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .mood-option-btn {
+      padding: 14px 8px;
+      border-radius: 10px;
+      border: 1px solid var(--gold-dim);
+      background: rgba(230, 185, 62, 0.06);
+      color: #fff;
+      font: inherit;
+      font-size: 14px;
+      cursor: pointer;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .mood-option-btn:hover, .mood-option-btn:active { background: rgba(230, 185, 62, 0.15); }
+
+    .mood-close-x {
+      display: block;
+      margin: 0 0 14px auto;
+      background: transparent;
+      border: none;
+      color: var(--secondary);
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 4px;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .mood-result-list .item-row:first-child { padding-top: 0; }
+
+    .mood-result-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .mood-result-actions button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      font: inherit;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      border: 1px solid var(--gold-dim);
+      box-sizing: border-box;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .mood-retry-btn { background: var(--gold); color: #14140f; border-color: var(--gold); }
+    .mood-close-btn { background: transparent; color: var(--secondary); }
+
+    .mood-empty {
+      color: var(--secondary);
+      font-size: 14px;
+      text-align: center;
+    }
+
     @media (min-width: 768px) {
       .chips-bar { justify-content: center; }
       .item-photo { width: 120px; height: 150px; }
@@ -688,6 +806,16 @@
     </div>
   </nav>
 
+  <button type="button" class="mood-cta" onclick="openMoodModal()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+      <line x1="9" y1="9" x2="9.01" y2="9"/>
+      <line x1="15" y1="9" x2="15.01" y2="9"/>
+    </svg>
+    Не знаєш, що обрати? Підберемо напій за настроєм
+  </button>
+
   <div id="menu-content">
     <section id="cocktails"><h2 class="section-title">Коктейлі</h2><div class="items-list" id="menu-cocktails"></div></section>
     <section id="drinks"><h2 class="section-title">Напої</h2><div class="items-list" id="menu-drinks"></div></section>
@@ -709,6 +837,51 @@
       <div class="announce-modal-actions">
         <a id="announceModalGo" href="#" target="_blank" rel="noopener" class="announce-modal-go">Перейти</a>
         <button type="button" class="announce-modal-close" onclick="closeAnnounceModal()">Закрити</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="moodModal" onclick="if (event.target === this) closeMoodModal()">
+    <div class="mood-modal-content">
+      <button type="button" class="mood-close-x" aria-label="Закрити" onclick="closeMoodModal()">&times;</button>
+
+      <div class="mood-step" id="moodStepMood">
+        <div class="mood-modal-question">Який у тебе настрій?</div>
+        <div class="mood-options">
+          <button type="button" class="mood-option-btn" onclick="moodPick('mood','bright')">Бадьорий</button>
+          <button type="button" class="mood-option-btn" onclick="moodPick('mood','chill')">Спокійний</button>
+          <button type="button" class="mood-option-btn" onclick="moodPick('mood','romance')">Романтичний</button>
+          <button type="button" class="mood-option-btn" onclick="moodPick('mood','wild')">Хочу відірватись</button>
+        </div>
+      </div>
+
+      <div class="mood-step" id="moodStepStrength">
+        <div class="mood-modal-question">Наскільки міцний напій хочеш?</div>
+        <div class="mood-options">
+          <button type="button" class="mood-option-btn" onclick="moodPick('strength','light')">Легкий</button>
+          <button type="button" class="mood-option-btn" onclick="moodPick('strength','medium')">Середній</button>
+          <button type="button" class="mood-option-btn" onclick="moodPick('strength','strong')">Міцний</button>
+          <button type="button" class="mood-option-btn" onclick="moodPick('strength','any')">Не важливо</button>
+        </div>
+      </div>
+
+      <div class="mood-step" id="moodStepFlavor">
+        <div class="mood-modal-question">Який смак більше до вподоби?</div>
+        <div class="mood-options">
+          <button type="button" class="mood-option-btn" onclick="moodPick('flavor','sweet')">Солодкий</button>
+          <button type="button" class="mood-option-btn" onclick="moodPick('flavor','sour')">Кислий</button>
+          <button type="button" class="mood-option-btn" onclick="moodPick('flavor','bitter')">Гіркий</button>
+          <button type="button" class="mood-option-btn" onclick="moodPick('flavor','any')">Не важливо</button>
+        </div>
+      </div>
+
+      <div class="mood-step" id="moodStepResult">
+        <div class="mood-modal-question">Ось що тобі підійде</div>
+        <div class="mood-result-list" id="moodResultList"></div>
+        <div class="mood-result-actions">
+          <button type="button" class="mood-retry-btn" onclick="moodReset()">Спробувати ще раз</button>
+          <button type="button" class="mood-close-btn" onclick="closeMoodModal()">Закрити</button>
+        </div>
       </div>
     </div>
   </div>
@@ -813,6 +986,114 @@
     function closeAnnounceModal() {
       document.getElementById('announceModal').style.display = 'none';
       document.body.style.overflow = 'auto';
+    }
+
+    // ====== Підбір напою за настроєм ======
+    // Чесний рекомендатор: бере реальні позиції з menuData, підбирає
+    // категорію під настрій/міцність і зіставляє смак за ключовими словами
+    // в назві/описі. Позиції з полем boost:true (у menu-data.js) отримують
+    // бонус до рахунку — так можна чесно частіше пропонувати те, що погано
+    // продається, серед варіантів, які й так підходять під запит гостя.
+    const MOOD_RECOMMEND_CATEGORIES = ['cocktails', 'drinks', 'beer', 'shots', 'liqueurs', 'nastoyanky'];
+    const MOOD_CATEGORY_LABELS = {
+      cocktails: 'Коктейлі', drinks: 'Напої', beer: 'Пиво',
+      shots: 'Шоти', liqueurs: 'Лікери', nastoyanky: 'Настоянки'
+    };
+    const MOOD_WEIGHTS = {
+      bright: { shots: 3, cocktails: 2, drinks: 1 },
+      chill: { beer: 3, liqueurs: 2, nastoyanky: 1 },
+      romance: { cocktails: 3, liqueurs: 2 },
+      wild: { shots: 3, nastoyanky: 3, cocktails: 1 }
+    };
+    const STRENGTH_WEIGHTS = {
+      light: { beer: 3, liqueurs: 2, cocktails: 1 },
+      medium: { cocktails: 3, drinks: 2, beer: 1 },
+      strong: { shots: 3, nastoyanky: 3 },
+      any: {}
+    };
+    const FLAVOR_KEYWORDS = {
+      sweet: ['СИРОП', 'МЕД', 'ЦУКЕРКА', 'ШОКОЛАД', 'ВИШНЯ', 'МАЛИНА', 'ЯГІД', 'ПЕРСИК', 'БАНАН', 'КОКОС', 'ДИТИНСТВА', 'ЛЯЛЯ', 'ГРЕНАДИН'],
+      sour: ['ЛИМОН', 'ЛАЙМ', 'ЖУРАВЛИН', 'КИСЛ', 'АПЕЛЬСИН'],
+      bitter: ['БІТТЕР', 'ВЕРМУТ', 'ТОНІК', 'КАВА'],
+      any: []
+    };
+
+    const moodAnswers = { mood: null, strength: null, flavor: null };
+
+    function openMoodModal() {
+      moodReset();
+      document.getElementById('moodModal').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMoodModal() {
+      document.getElementById('moodModal').style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+
+    function moodShowStep(stepId) {
+      document.querySelectorAll('.mood-step').forEach(el => el.classList.remove('active'));
+      document.getElementById(stepId).classList.add('active');
+    }
+
+    function moodReset() {
+      moodAnswers.mood = null;
+      moodAnswers.strength = null;
+      moodAnswers.flavor = null;
+      moodShowStep('moodStepMood');
+    }
+
+    function moodPick(key, value) {
+      moodAnswers[key] = value;
+      if (key === 'mood') { moodShowStep('moodStepStrength'); return; }
+      if (key === 'strength') { moodShowStep('moodStepFlavor'); return; }
+      renderMoodResults(computeMoodRecommendations());
+      moodShowStep('moodStepResult');
+    }
+
+    function computeMoodRecommendations() {
+      const moodWeights = MOOD_WEIGHTS[moodAnswers.mood] || {};
+      const strengthWeights = STRENGTH_WEIGHTS[moodAnswers.strength] || {};
+      const flavorKeywords = FLAVOR_KEYWORDS[moodAnswers.flavor] || [];
+
+      const pool = [];
+      MOOD_RECOMMEND_CATEGORIES.forEach(cat => {
+        (menuData[cat] || []).forEach(item => pool.push(Object.assign({ _category: cat }, item)));
+      });
+
+      const scored = pool.map(item => {
+        let score = (moodWeights[item._category] || 0) + (strengthWeights[item._category] || 0);
+        const haystack = (item.name + ' ' + (item.desc || '')).toUpperCase();
+        if (flavorKeywords.some(kw => haystack.includes(kw))) score += 2;
+        if (item.boost) score += 5;
+        score += Math.random() * 0.01; // легке перемішування серед рівних
+        return { item, score };
+      });
+
+      scored.sort((a, b) => b.score - a.score);
+      return scored.slice(0, 3).map(s => s.item);
+    }
+
+    function renderMoodResults(items) {
+      const list = document.getElementById('moodResultList');
+      list.innerHTML = '';
+      if (!items.length) {
+        list.innerHTML = '<div class="mood-empty">Не вдалося підібрати — спробуйте інші відповіді.</div>';
+        return;
+      }
+      items.forEach(drink => {
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'item-row';
+        rowDiv.innerHTML = `
+          <div class="item-info">
+            <div class="item-name">${drink.name}</div>
+            <div class="item-price">${drink.price}</div>
+            ${drink.desc ? `<div class="item-desc">${drink.desc}</div>` : ''}
+            <div class="item-stats">${VOLUME_ICON}<span>${MOOD_CATEGORY_LABELS[drink._category]}${drink.volume ? ' · ' + drink.volume : ''}</span></div>
+          </div>
+        `;
+        list.appendChild(rowDiv);
+      });
     }
 
     function renderMenu(items, containerId) {
@@ -971,13 +1252,15 @@
     updateActiveChip();
     updateAnnounceVisibility();
 
-    // Esc закриває будь-яку відкриту модалку (фото товару або афішу анонсу).
+    // Esc закриває будь-яку відкриту модалку (фото товару, афіша анонсу, підбір напою).
     window.addEventListener('keydown', (e) => {
       if (e.key !== 'Escape') return;
       const modal = document.getElementById('modal');
       const announceModal = document.getElementById('announceModal');
+      const moodModal = document.getElementById('moodModal');
       if (modal.style.display === 'flex') { modal.style.display = 'none'; document.body.style.overflow = 'auto'; }
       if (announceModal.style.display === 'flex') closeAnnounceModal();
+      if (moodModal.style.display === 'flex') closeMoodModal();
     });
   </script>
 </body>
