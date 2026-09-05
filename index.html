@@ -188,6 +188,10 @@
       overflow: hidden;
       transition: background 0.15s, max-height 0.5s ease, opacity 0.45s ease,
                   margin 0.5s ease, padding 0.5s ease, border-width 0.5s ease;
+      font: inherit;
+      color: inherit;
+      text-align: left;
+      cursor: pointer;
     }
 
     .announce-banner.collapsed {
@@ -405,6 +409,70 @@
     }
     #modal img { max-width: 90%; max-height: 80%; border-radius: 14px; border: 2px solid var(--gold); box-shadow: 0 0 20px rgba(230, 185, 62, 0.3); }
 
+    /* ================= МОДАЛКА АНОНСУ ================= */
+    #announceModal {
+      display: none; position: fixed; z-index: 2100; top: 0; left: 0;
+      width: 100%; height: 100%; background: rgba(0,0,0,0.95);
+      justify-content: center; align-items: center; padding: 24px; box-sizing: border-box;
+    }
+
+    .announce-modal-content {
+      width: 100%;
+      max-width: 340px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .announce-modal-content img {
+      max-width: 100%;
+      max-height: 55vh;
+      border-radius: 14px;
+      border: 2px solid var(--gold);
+      box-shadow: 0 0 20px rgba(230, 185, 62, 0.3);
+      object-fit: contain;
+    }
+
+    .announce-modal-title {
+      color: #fff;
+      font-size: 15px;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .announce-modal-actions {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .announce-modal-actions a,
+    .announce-modal-actions button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      border: 1px solid var(--gold-dim);
+      box-sizing: border-box;
+    }
+
+    .announce-modal-go {
+      background: var(--gold);
+      color: #14140f;
+      border-color: var(--gold);
+    }
+
+    .announce-modal-close {
+      background: transparent;
+      color: var(--secondary);
+    }
+
     @media (min-width: 768px) {
       .chips-bar { justify-content: center; }
       .item-photo { width: 120px; height: 150px; }
@@ -557,23 +625,24 @@
     </div>
 
     <!--
-      АНОНС: щоб оновити подію — замініть href на посилання на пост в Instagram,
-      картинку img/announce.jpg на афішу, текст в .announce-title і дату в
-      data-event-date (формат РРРР-ММ-ДД — дата самої події). Банер сам
-      зникне, коли настане наступний день після цієї дати.
-      Щоб приховати банер прямо зараз — додайте style="display:none" до <a class="announce-banner">.
+      АНОНС: щоб оновити подію — замініть data-href на посилання на пост в
+      Instagram, картинку img/announce.jpg на афішу, текст в .announce-title
+      і дату в data-event-date (формат РРРР-ММ-ДД — дата самої події). Банер
+      сам зникне, коли настане наступний день після цієї дати. Клік по
+      банеру відкриває афішу на весь екран з кнопками «Перейти»/«Закрити».
+      Щоб приховати банер прямо зараз — додайте style="display:none" до <button class="announce-banner">.
     -->
-    <a class="announce-banner"
-       href="https://www.instagram.com/p/DceTkTQsueA/?igsi=MXF3d3F1dWF6bzBi"
-       target="_blank" rel="noopener"
+    <button type="button" class="announce-banner"
+       data-href="https://www.instagram.com/p/DceTkTQsueA/?igsi=MXF3d3F1dWF6bzBi"
        data-event-date="2026-09-05"
-       aria-label="Анонс концерту YOUTHEX — Alter Ego Tour">
+       onclick="openAnnounceModal(this)"
+       aria-label="Анонс концерту YOUTHEX — Alter Ego Tour: відкрити афішу">
       <img src="img/announce.jpg" alt="Анонс: YOUTHEX — Alter Ego Tour">
       <div class="announce-text">
         <span class="announce-label">Анонс</span>
         <span class="announce-title">YOUTHEX — Alter Ego Tour · 05.09 19:00</span>
       </div>
-    </a>
+    </button>
 
     <div class="chips-wrap" id="chipsWrap">
       <div class="chips-bar" id="chipsBar">
@@ -606,6 +675,17 @@
 
   <div id="modal" onclick="this.style.display='none'; document.body.style.overflow='auto'">
     <img id="modal-img" src="" alt="View">
+  </div>
+
+  <div id="announceModal" onclick="if (event.target === this) closeAnnounceModal()">
+    <div class="announce-modal-content">
+      <img id="announceModalImg" src="" alt="Афіша">
+      <div class="announce-modal-title" id="announceModalTitle"></div>
+      <div class="announce-modal-actions">
+        <a id="announceModalGo" href="#" target="_blank" rel="noopener" class="announce-modal-go">Перейти</a>
+        <button type="button" class="announce-modal-close" onclick="closeAnnounceModal()">Закрити</button>
+      </div>
+    </div>
   </div>
 
   <a class="feedback-btn"
@@ -687,6 +767,24 @@
       modalImg.src = src;
       modal.style.display = 'flex';
       document.body.style.overflow = 'hidden';
+    }
+
+    // Клік по банеру анонсу — відкриває афішу на весь екран з кнопками
+    // «Перейти» (на пост в Instagram) і «Закрити».
+    function openAnnounceModal(trigger) {
+      const img = trigger.querySelector('img');
+      const titleEl = trigger.querySelector('.announce-title');
+      document.getElementById('announceModalImg').src = img.src;
+      document.getElementById('announceModalImg').alt = img.alt;
+      document.getElementById('announceModalTitle').textContent = titleEl ? titleEl.textContent : '';
+      document.getElementById('announceModalGo').href = trigger.dataset.href;
+      document.getElementById('announceModal').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeAnnounceModal() {
+      document.getElementById('announceModal').style.display = 'none';
+      document.body.style.overflow = 'auto';
     }
 
     function renderMenu(items, containerId) {
@@ -832,6 +930,15 @@
     updateScrollPadding();
     updateActiveChip();
     updateAnnounceVisibility();
+
+    // Esc закриває будь-яку відкриту модалку (фото товару або афішу анонсу).
+    window.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      const modal = document.getElementById('modal');
+      const announceModal = document.getElementById('announceModal');
+      if (modal.style.display === 'flex') { modal.style.display = 'none'; document.body.style.overflow = 'auto'; }
+      if (announceModal.style.display === 'flex') closeAnnounceModal();
+    });
   </script>
 </body>
 </html>
