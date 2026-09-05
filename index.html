@@ -167,7 +167,22 @@
       border-radius: 12px;
       background: rgba(230, 185, 62, 0.06);
       text-decoration: none;
-      transition: background 0.15s;
+      max-height: 100px;
+      opacity: 1;
+      overflow: hidden;
+      transition: background 0.15s, max-height 0.25s ease, opacity 0.2s ease,
+                  margin 0.25s ease, padding 0.25s ease, border-width 0.25s ease;
+    }
+
+    .announce-banner.collapsed {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+      margin-bottom: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      border-width: 0;
+      pointer-events: none;
     }
 
     .announce-banner:hover,
@@ -755,10 +770,21 @@
       });
     }
 
+    // Ховаємо анонс, коли відвідувач починає гортати меню — інакше "липка"
+    // шапка з анонсом займає забагато екрана. При поверненні нагору анонс
+    // з'являється знову.
+    const announceBanner = document.querySelector('.announce-banner');
+    const ANNOUNCE_HIDE_THRESHOLD = 8;
+
+    function updateAnnounceVisibility() {
+      if (!announceBanner) return;
+      announceBanner.classList.toggle('collapsed', window.scrollY > ANNOUNCE_HIDE_THRESHOLD);
+    }
+
     let ticking = false;
     function onScroll() {
       if (!ticking) {
-        requestAnimationFrame(() => { updateActiveChip(); ticking = false; });
+        requestAnimationFrame(() => { updateActiveChip(); updateAnnounceVisibility(); ticking = false; });
         ticking = true;
       }
     }
@@ -768,6 +794,7 @@
 
     updateScrollPadding();
     updateActiveChip();
+    updateAnnounceVisibility();
   </script>
 </body>
 </html>
