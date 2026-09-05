@@ -893,8 +893,20 @@
       });
     });
 
+    // Банер анонсу згортається під час скролу (див. updateAnnounceVisibility
+    // нижче), тому "жива" висота шапки то більша, то менша. Якщо рахувати
+    // відступ під поточний (іноді ще розгорнутий) стан, після скролу до
+    // якоря шапка встигає згорнутися й розділ підсвічується не той —
+    // тому тут завжди рахуємо офсет так, ніби банер уже згорнутий.
     function getHeaderOffset() {
-      return (navbarEl ? navbarEl.offsetHeight : 0) + 16;
+      let height = navbarEl ? navbarEl.offsetHeight : 0;
+      if (announceBanner && !announceBanner.classList.contains('collapsed')) {
+        const style = getComputedStyle(announceBanner);
+        const marginTop = parseFloat(style.marginTop) || 0;
+        const marginBottom = parseFloat(style.marginBottom) || 0;
+        height -= announceBanner.offsetHeight + marginTop + marginBottom;
+      }
+      return height + 16;
     }
 
     function updateScrollPadding() {
