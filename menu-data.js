@@ -17,7 +17,7 @@ const menuData = {
   drinks: [],
   beer: [
     { name: 'Dunkel', desc: 'ТЕМНЕ', volume: '500 мл', price: '80 ₴', img: '' },
-    { name: 'Staropramen ж/б', desc: '', volume: '500 мл', price: '80 ₴', img: '' },
+    { name: 'Staropramen з/б', desc: '', volume: '500 мл', price: '80 ₴', img: '' },
     { name: 'Львівське Фірмове', desc: 'СВІТЛЕ', volume: '500 мл', price: '80 ₴', img: '' },
     { name: 'Blanche 1664 б/а', desc: '', volume: '300 мл', price: '80 ₴', img: '' }
   ],
