@@ -526,6 +526,17 @@
       0%, 100% { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45), 0 0 0 0 rgba(230, 185, 62, 0.5); }
       50% { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45), 0 0 0 8px rgba(230, 185, 62, 0); }
     }
+    /* Привертає увагу до кнопки радіо, поки його жодного разу не увімкнули. */
+    .radio-btn.attention {
+      animation: radio-bounce 2.4s ease-in-out infinite;
+    }
+    @keyframes radio-bounce {
+      0%, 45%, 100% { transform: translateY(0); }
+      10% { transform: translateY(-10px); }
+      20% { transform: translateY(0); }
+      30% { transform: translateY(-6px); }
+      40% { transform: translateY(0); }
+    }
     .radio-status {
       position: fixed;
       left: 16px;
@@ -705,7 +716,7 @@
   <audio id="radioPlayer" preload="none">
     <source src="https://stream.radioparadise.com/rock-128" type="audio/aac">
   </audio>
-  <button type="button" class="radio-btn" id="radioBtn" aria-label="Увімкнути радіо: Radio Paradise Rock Mix" title="Радіо: Radio Paradise — Rock Mix">
+  <button type="button" class="radio-btn attention" id="radioBtn" aria-label="Увімкнути радіо: Radio Paradise Rock Mix" title="Радіо: Radio Paradise — Rock Mix">
     <svg id="radioIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M6 8V6a2 2 0 0 1 2-2h9l4 4"/>
       <rect x="2" y="8" width="20" height="12" rx="2"/>
@@ -740,6 +751,7 @@
 
       audio.addEventListener('playing', () => {
         btn.classList.add('playing');
+        btn.classList.remove('attention');
         showStatus('Радіо: Radio Paradise — Rock Mix');
       });
 
