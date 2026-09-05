@@ -176,6 +176,7 @@
     .announce-banner {
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 12px;
       margin: 14px 16px 4px;
       padding: 8px;
@@ -221,8 +222,10 @@
     .announce-banner .announce-text {
       display: flex;
       flex-direction: column;
+      align-items: center;
       gap: 2px;
       min-width: 0;
+      text-align: center;
     }
 
     .announce-banner .announce-label {
@@ -241,6 +244,11 @@
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+    }
+
+    .announce-banner .announce-datetime {
+      font-size: 12px;
+      color: var(--secondary);
     }
 
     /* ================= ЧІПИ-КАТЕГОРІЇ ================= */
@@ -637,9 +645,10 @@
 
     <!--
       АНОНС: щоб оновити подію — замініть data-href на посилання на пост в
-      Instagram, картинку img/announce.jpg на афішу, текст в .announce-title
-      і дату в data-event-date (формат РРРР-ММ-ДД — дата самої події). Банер
-      сам зникне, коли настане наступний день після цієї дати. Клік по
+      Instagram, картинку img/announce.jpg на афішу, назву в .announce-title,
+      дату й час у .announce-datetime, і дату в data-event-date (формат
+      РРРР-ММ-ДД — дата самої події, окремо від тексту в .announce-datetime).
+      Банер сам зникне, коли настане наступний день після цієї дати. Клік по
       банеру відкриває афішу на весь екран з кнопками «Перейти»/«Закрити».
       Щоб приховати банер прямо зараз — додайте style="display:none" до <button class="announce-banner">.
     -->
@@ -651,7 +660,8 @@
       <img src="img/announce.jpg" alt="Анонс: YOUTHEX — Alter Ego Tour">
       <div class="announce-text">
         <span class="announce-label">Анонс</span>
-        <span class="announce-title">YOUTHEX — Alter Ego Tour · 05.09 19:00</span>
+        <span class="announce-title">YOUTHEX — Alter Ego Tour</span>
+        <span class="announce-datetime">05.09 19:00</span>
       </div>
     </button>
 
@@ -786,9 +796,11 @@
     function openAnnounceModal(trigger) {
       const img = trigger.querySelector('img');
       const titleEl = trigger.querySelector('.announce-title');
+      const datetimeEl = trigger.querySelector('.announce-datetime');
+      const titleParts = [titleEl && titleEl.textContent, datetimeEl && datetimeEl.textContent].filter(Boolean);
       document.getElementById('announceModalImg').src = img.src;
       document.getElementById('announceModalImg').alt = img.alt;
-      document.getElementById('announceModalTitle').textContent = titleEl ? titleEl.textContent : '';
+      document.getElementById('announceModalTitle').textContent = titleParts.join(' · ');
       document.getElementById('announceModalGo').href = trigger.dataset.href;
       document.getElementById('announceModal').style.display = 'flex';
       document.body.style.overflow = 'hidden';
