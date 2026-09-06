@@ -267,7 +267,7 @@
       -webkit-overflow-scrolling: touch;
       scroll-snap-type: x proximity;
       scroll-padding-left: 16px;
-      gap: 18px;
+      gap: 6px;
       padding: 10px 16px 14px;
       scrollbar-width: none;
       -ms-overflow-style: none;
@@ -323,7 +323,7 @@
       font-size: 13px;
       letter-spacing: 0.4px;
       white-space: nowrap;
-      padding: 8px 14px;
+      padding: 8px 10px;
       border-radius: 999px;
       cursor: pointer;
       transition: background 0.25s, color 0.25s;
@@ -1438,6 +1438,56 @@
         }
       });
     }
+
+    // Свайп пальцем ліворуч/праворуч по сторінці — перемикає головні
+    // розділи меню в тому ж порядку, що й чіпси нагорі (MAIN_TAB_ORDER).
+    // Ігноруємо свайпи, що починаються на самій панелі чіпсів (вона й так
+    // гортається дотиком по горизонталі) або всередині відкритого модального
+    // вікна (фото/анонс/бот-порадник).
+    (function initSwipeNavigation() {
+      const SWIPE_MIN_DISTANCE = 60;
+      const SWIPE_MAX_OFF_AXIS = 60;
+      const SWIPE_MAX_DURATION = 600;
+
+      let startX = 0, startY = 0, startTime = 0, tracking = false;
+
+      function onTouchStart(e) {
+        if (e.target.closest('.chips-bar, #modal, #announceModal, #moodModal')) {
+          tracking = false;
+          return;
+        }
+        const touch = e.touches[0];
+        startX = touch.clientX;
+        startY = touch.clientY;
+        startTime = Date.now();
+        tracking = true;
+      }
+
+      function onTouchEnd(e) {
+        if (!tracking) return;
+        tracking = false;
+
+        const touch = e.changedTouches[0];
+        const dx = touch.clientX - startX;
+        const dy = touch.clientY - startY;
+        if (Date.now() - startTime > SWIPE_MAX_DURATION) return;
+        if (Math.abs(dx) < SWIPE_MIN_DISTANCE || Math.abs(dy) > SWIPE_MAX_OFF_AXIS) return;
+
+        const current = document.querySelector('#menu-content > section.active');
+        if (!current) return;
+        const idx = MAIN_TAB_ORDER.indexOf(current.id);
+        if (idx === -1) return;
+
+        if (dx < 0 && idx < MAIN_TAB_ORDER.length - 1) {
+          switchMainTab(MAIN_TAB_ORDER[idx + 1]);
+        } else if (dx > 0 && idx > 0) {
+          switchMainTab(MAIN_TAB_ORDER[idx - 1]);
+        }
+      }
+
+      document.addEventListener('touchstart', onTouchStart, { passive: true });
+      document.addEventListener('touchend', onTouchEnd, { passive: true });
+    })();
 
     let ticking = false;
     function onScroll() {
