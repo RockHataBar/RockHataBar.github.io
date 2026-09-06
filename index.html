@@ -30,7 +30,7 @@
       --bg: #0a0a0b;
       --text: #f2f0ea;
       --secondary: #9c9a95;
-      --nav-bg: rgba(10, 10, 11, 0.84);
+      --nav-bg: rgba(10, 10, 11, 0.74);
       --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
       --status-open: #6fbf73;
       --status-closed: #8a8884;
@@ -916,11 +916,11 @@
         <button type="button" class="subgroup-chip active" data-tab="longs" onclick="switchSubTab('cocktails', 'longs')">Лонги</button>
         <button type="button" class="subgroup-chip" data-tab="shots" onclick="switchSubTab('cocktails', 'shots')">Шоти</button>
       </div>
-      <div class="subgroup-panel active" data-tab-panel="longs">
+      <div class="subgroup-panel tab-panel active" data-tab-panel="longs">
         <h3 class="subgroup-title">Лонги</h3>
         <div class="items-list" id="menu-cocktails"></div>
       </div>
-      <div class="subgroup-panel" data-tab-panel="shots">
+      <div class="subgroup-panel tab-panel" data-tab-panel="shots">
         <h3 class="subgroup-title">Шоти</h3>
         <div class="items-list" id="menu-shots"></div>
       </div>
@@ -937,11 +937,11 @@
         <button type="button" class="subgroup-chip active" data-tab="nastoyanky" onclick="switchSubTab('tinctures', 'nastoyanky')">Настоянки</button>
         <button type="button" class="subgroup-chip" data-tab="liqueurs" onclick="switchSubTab('tinctures', 'liqueurs')">Лікери</button>
       </div>
-      <div class="subgroup-panel active" data-tab-panel="nastoyanky">
+      <div class="subgroup-panel tab-panel active" data-tab-panel="nastoyanky">
         <h3 class="subgroup-title">Настоянки</h3>
         <div class="items-list" id="menu-nastoyanky"></div>
       </div>
-      <div class="subgroup-panel" data-tab-panel="liqueurs">
+      <div class="subgroup-panel tab-panel" data-tab-panel="liqueurs">
         <h3 class="subgroup-title">Лікери</h3>
         <div class="items-list" id="menu-liqueurs"></div>
       </div>
@@ -1388,6 +1388,15 @@
 
       const direction = MAIN_TAB_ORDER.indexOf(tab) > MAIN_TAB_ORDER.indexOf(currentTab) ? 'right' : 'left';
 
+      // Спершу миттєво скролимо нагору — і лише потім міняємо активну секцію.
+      // У html увімкнено scroll-behavior:smooth, тому навіть звичайний
+      // scrollTo(0,0) без behavior:'instant' виконався б плавно — і DOM
+      // підмінився б ще до завершення скролу. Розділи мають дуже різну
+      // довжину (є й зовсім порожні), тому в цей момент браузер миттєво
+      // "обрізає" позицію скролу під новий короткий документ — це і
+      // виглядає як різкий ривок шапки та сторінки.
+      window.scrollTo({ top: 0, behavior: 'instant' });
+
       document.querySelectorAll('.chips-bar > .chip').forEach(chip => {
         chip.classList.toggle('active', chip.dataset.tab === tab);
       });
@@ -1397,8 +1406,6 @@
           section.classList.add('active', direction === 'right' ? 'slide-from-right' : 'slide-from-left');
         }
       });
-
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // Перемикання підгруп всередині розділу (Лонги/Шоти в "Коктейлі",
@@ -1415,6 +1422,12 @@
 
       const direction = order.indexOf(tab) > order.indexOf(currentTab) ? 'right' : 'left';
 
+      // Підгрупи різної довжини — якщо спершу підмінити вміст, а тоді
+      // скролити, довший попередній скрол миттєво "обрізається" під новий
+      // короткий список ще до початку анімації. Тому підіймаємось до
+      // початку розділу ДО заміни панелі.
+      section.scrollIntoView({ block: 'start' });
+
       section.querySelectorAll('.subgroup-chip').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.tab === tab);
       });
@@ -1424,10 +1437,6 @@
           panel.classList.add('active', direction === 'right' ? 'slide-from-right' : 'slide-from-left');
         }
       });
-
-      // Підгрупи різної довжини — якщо не піднятись нагору розділу, та сама
-      // позиція скролу може опинитись вже за межами коротшого списку.
-      section.scrollIntoView({ block: 'start', behavior: 'smooth' });
     }
 
     let ticking = false;
