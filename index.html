@@ -1317,15 +1317,6 @@
 
     const navbarEl = document.querySelector('.navbar');
 
-    // Якщо натиснута вкладка виглядає лише наполовину (обрізана краєм
-    // панелі), докручуємо панель категорій так, щоб вона стала повністю
-    // видимою.
-    document.querySelectorAll('.chip').forEach(link => {
-      link.addEventListener('click', () => {
-        link.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
-      });
-    });
-
     // Банер анонсу згортається під час скролу (див. updateAnnounceVisibility
     // нижче), тому "жива" висота шапки то більша, то менша. Липка навігація
     // підгруп (Лонги/Шоти, Настоянки/Лікери) має прилипати одразу під
@@ -1381,24 +1372,46 @@
     // Видима лише одна секція, решта — display:none. Друга "заїжджає"
     // збоку — напрямок залежить від порядку розділів у навігації.
     const MAIN_TAB_ORDER = ['cocktails', 'strong-alcohol', 'tinctures', 'beer', 'wine', 'nonalcohol', 'snacks', 'extras'];
+    let mainTabSwitchInProgress = false;
     function switchMainTab(tab) {
+      // Захист від накладання: якщо друге перемикання (наприклад, від
+      // швидкого повторного свайпу) прилетить, поки перше ще не
+      // завершилось, ігноруємо його замість того, щоб міняти чіп і секцію
+      // в неузгоджений спосіб.
+      if (mainTabSwitchInProgress) return;
+
       const current = document.querySelector('#menu-content > section.active');
       const currentTab = current ? current.id : null;
       if (currentTab === tab) return;
 
+      mainTabSwitchInProgress = true;
+
       const direction = MAIN_TAB_ORDER.indexOf(tab) > MAIN_TAB_ORDER.indexOf(currentTab) ? 'right' : 'left';
 
-      // Спершу миттєво скролимо нагору — і лише потім міняємо активну секцію.
-      // У html увімкнено scroll-behavior:smooth, тому навіть звичайний
-      // scrollTo(0,0) без behavior:'instant' виконався б плавно — і DOM
-      // підмінився б ще до завершення скролу. Розділи мають дуже різну
-      // довжину (є й зовсім порожні), тому в цей момент браузер миттєво
-      // "обрізає" позицію скролу під новий короткий документ — це і
-      // виглядає як різкий ривок шапки та сторінки.
-      window.scrollTo({ top: 0, behavior: 'instant' });
+      // Скролимо нагору, лише якщо сторінку й справді прогорнуто —
+      // інакше на iOS Safari цей виклик б'ється з власною анімацією шапки
+      // адресного рядка (вона згортається/розгортається саме навколо
+      // позиції скролу 0), і після невеличкого "відтягування" сторінки
+      // вниз (як перед оновленням) чи свайпу біля самого верху шапка
+      // браузера залишається "зависати" в розгорнутому вигляді, займаючи
+      // частину екрана. Якщо ж сторінка й так уже внизу на 0 — новий
+      // виклик scrollTo нічого корисного не робить, лише заважає.
+      // Коли ж прогортано вглиб (є ризик різкого "обрізання" скролу під
+      // новий, можливо короткий, розділ) — скролимо миттєво ДО підміни
+      // DOM, з тих самих причин, що й раніше.
+      if (window.scrollY > 0) {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      }
 
+      // Чіп потрібної вкладки може бути за межами видимої частини панелі
+      // категорій (вона гортається по горизонталі) — тому доскролюємо її
+      // до центру. Робимо це тут, а не лише в обробнику кліку, щоб чіп
+      // так само підсвічувався й прокручувався у видиму зону і при
+      // перемиканні свайпом.
       document.querySelectorAll('.chips-bar > .chip').forEach(chip => {
-        chip.classList.toggle('active', chip.dataset.tab === tab);
+        const isActive = chip.dataset.tab === tab;
+        chip.classList.toggle('active', isActive);
+        if (isActive) chip.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
       });
       document.querySelectorAll('#menu-content > section').forEach(section => {
         section.classList.remove('active', 'slide-from-right', 'slide-from-left');
@@ -1406,6 +1419,8 @@
           section.classList.add('active', direction === 'right' ? 'slide-from-right' : 'slide-from-left');
         }
       });
+
+      mainTabSwitchInProgress = false;
     }
 
     // Перемикання підгруп всередині розділу (Лонги/Шоти в "Коктейлі",
@@ -1448,6 +1463,12 @@
       const SWIPE_MIN_DISTANCE = 60;
       const SWIPE_MAX_OFF_AXIS = 60;
       const SWIPE_MAX_DURATION = 600;
+      // На iOS Safari дотик, що починається біля самого краю екрана,
+      // одночасно розпізнається системним жестом "назад/вперед по
+      // історії" — обидва обробники тоді тягнуть за один і той самий
+      // дотик, і сторінка лишається у неузгодженому вигляді. Тому старт
+      // свайпу в цій прикордонній зоні не відстежуємо взагалі.
+      const EDGE_EXCLUSION = 24;
 
       let startX = 0, startY = 0, startTime = 0, tracking = false;
 
@@ -1457,6 +1478,10 @@
           return;
         }
         const touch = e.touches[0];
+        if (touch.clientX < EDGE_EXCLUSION || touch.clientX > window.innerWidth - EDGE_EXCLUSION) {
+          tracking = false;
+          return;
+        }
         startX = touch.clientX;
         startY = touch.clientY;
         startTime = Date.now();
