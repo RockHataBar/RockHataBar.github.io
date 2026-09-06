@@ -1461,7 +1461,6 @@
     // вікна (фото/анонс/бот-порадник).
     (function initSwipeNavigation() {
       const SWIPE_MIN_DISTANCE = 60;
-      const SWIPE_MAX_OFF_AXIS = 60;
       const SWIPE_MAX_DURATION = 600;
       // На iOS Safari дотик, що починається біля самого краю екрана,
       // одночасно розпізнається системним жестом "назад/вперед по
@@ -1469,8 +1468,11 @@
       // дотик, і сторінка лишається у неузгодженому вигляді. Тому старт
       // свайпу в цій прикордонній зоні не відстежуємо взагалі.
       const EDGE_EXCLUSION = 24;
+      // Скільки пікселів треба зрушити пальцем, перш ніж вирішувати, це
+      // горизонтальний свайп чи вертикальний скрол/потягування.
+      const AXIS_LOCK_THRESHOLD = 10;
 
-      let startX = 0, startY = 0, startTime = 0, tracking = false;
+      let startX = 0, startY = 0, startTime = 0, tracking = false, axis = null;
 
       function onTouchStart(e) {
         if (e.target.closest('.chips-bar, #modal, #announceModal, #moodModal')) {
@@ -1486,17 +1488,45 @@
         startY = touch.clientY;
         startTime = Date.now();
         tracking = true;
+        axis = null;
+      }
+
+      // Один і той самий безперервний дотик може почати рухатись вниз
+      // (наприклад, невелике "відтягування" сторінки — те, що на iOS
+      // виглядає як початок pull-to-refresh) і лише потім, не відриваючи
+      // пальця, повернути вбік. Якщо чекати аж до touchend і дивитись
+      // тільки на початкову й кінцеву точку, ми не відрізнимо це від
+      // чистого горизонтального свайпу — і подмінюємо DOM саме тоді, коли
+      // нативна анімація сторінки (pull-to-refresh) ще не встигла
+      // розвʼязатися, через що вона й лишається "застряглою" на половині.
+      // Тому напрямок фіксуємо одразу, за першими ж пікселями руху: якщо
+      // рух спершу переважно вертикальний — повністю припиняємо стежити
+      // за цим дотиком, хай би він потім як завгодно пішов убік.
+      function onTouchMove(e) {
+        if (!tracking || axis) return;
+        const touch = e.touches[0];
+        const dx = touch.clientX - startX;
+        const dy = touch.clientY - startY;
+        if (Math.abs(dx) < AXIS_LOCK_THRESHOLD && Math.abs(dy) < AXIS_LOCK_THRESHOLD) return;
+
+        if (Math.abs(dy) >= Math.abs(dx)) {
+          tracking = false;
+        } else {
+          axis = 'horizontal';
+        }
       }
 
       function onTouchEnd(e) {
-        if (!tracking) return;
+        if (!tracking || axis !== 'horizontal') {
+          tracking = false;
+          return;
+        }
         tracking = false;
 
         const touch = e.changedTouches[0];
         const dx = touch.clientX - startX;
-        const dy = touch.clientY - startY;
         if (Date.now() - startTime > SWIPE_MAX_DURATION) return;
-        if (Math.abs(dx) < SWIPE_MIN_DISTANCE || Math.abs(dy) > SWIPE_MAX_OFF_AXIS) return;
+        if (Math.abs(dx) < SWIPE_MIN_DISTANCE) return;
 
         const current = document.querySelector('#menu-content > section.active');
         if (!current) return;
@@ -1511,6 +1541,7 @@
       }
 
       document.addEventListener('touchstart', onTouchStart, { passive: true });
+      document.addEventListener('touchmove', onTouchMove, { passive: true });
       document.addEventListener('touchend', onTouchEnd, { passive: true });
     })();
 
