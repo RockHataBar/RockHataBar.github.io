@@ -1317,15 +1317,6 @@
 
     const navbarEl = document.querySelector('.navbar');
 
-    // Якщо натиснута вкладка виглядає лише наполовину (обрізана краєм
-    // панелі), докручуємо панель категорій так, щоб вона стала повністю
-    // видимою.
-    document.querySelectorAll('.chip').forEach(link => {
-      link.addEventListener('click', () => {
-        link.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
-      });
-    });
-
     // Банер анонсу згортається під час скролу (див. updateAnnounceVisibility
     // нижче), тому "жива" висота шапки то більша, то менша. Липка навігація
     // підгруп (Лонги/Шоти, Настоянки/Лікери) має прилипати одразу під
@@ -1397,8 +1388,15 @@
       // виглядає як різкий ривок шапки та сторінки.
       window.scrollTo({ top: 0, behavior: 'instant' });
 
+      // Чіп потрібної вкладки може бути за межами видимої частини панелі
+      // категорій (вона гортається по горизонталі) — тому доскролюємо її
+      // до центру. Робимо це тут, а не лише в обробнику кліку, щоб чіп
+      // так само підсвічувався й прокручувався у видиму зону і при
+      // перемиканні свайпом.
       document.querySelectorAll('.chips-bar > .chip').forEach(chip => {
-        chip.classList.toggle('active', chip.dataset.tab === tab);
+        const isActive = chip.dataset.tab === tab;
+        chip.classList.toggle('active', isActive);
+        if (isActive) chip.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
       });
       document.querySelectorAll('#menu-content > section').forEach(section => {
         section.classList.remove('active', 'slide-from-right', 'slide-from-left');
