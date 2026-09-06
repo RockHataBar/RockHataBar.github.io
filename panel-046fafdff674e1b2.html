@@ -154,20 +154,23 @@
     <div class="categories" id="categories"></div>
 
     <!-- Той самий cache-busting номер, що і в index.html. -->
-    <script src="menu-data.js?v=20260901"></script>
+    <script src="menu-data.js?v=20260906"></script>
     <script>
         const DRAFT_KEY = 'rockhata_menu_draft_v2';
 
         // Порядок і підписи категорій відповідають розділам у index.html
-        const CATEGORY_ORDER = ['cocktails', 'drinks', 'beer', 'shots', 'snacks', 'nastoyanky', 'liqueurs'];
+        const CATEGORY_ORDER = ['cocktails', 'shots', 'strongAlcohol', 'nastoyanky', 'liqueurs', 'beer', 'wine', 'nonAlcohol', 'snacks', 'extras'];
         const CATEGORY_LABELS = {
-            cocktails: 'Коктейлі',
-            drinks: 'Напої',
+            cocktails: 'Коктейлі — Лонги',
+            shots: 'Коктейлі — Шоти',
+            strongAlcohol: 'Міцний алкоголь',
+            nastoyanky: 'Крафтові настоянки — Настоянки',
+            liqueurs: 'Крафтові настоянки — Лікери',
             beer: 'Пиво',
-            shots: 'Шоти',
+            wine: 'Вино',
+            nonAlcohol: 'Безалкогольне',
             snacks: 'Снеки',
-            nastoyanky: 'Настоянки',
-            liqueurs: 'Лікери'
+            extras: 'Додатки'
         };
 
         let state = {};

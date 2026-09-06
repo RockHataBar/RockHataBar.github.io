@@ -315,14 +315,20 @@
       display: inline-block;
       scroll-snap-align: start;
       color: var(--gold-dim);
+      background: transparent;
+      border: none;
       text-decoration: none;
+      font-family: inherit;
       font-weight: bold;
       font-size: 13px;
       letter-spacing: 0.4px;
       white-space: nowrap;
       padding: 8px 14px;
       border-radius: 999px;
+      cursor: pointer;
       transition: background 0.25s, color 0.25s;
+      -webkit-appearance: none;
+      appearance: none;
     }
 
     .chip.active {
@@ -353,7 +359,37 @@
       background: var(--gold);
     }
 
-    section:first-of-type .section-title { margin-top: 4px; }
+    /* Кожен розділ по черзі стає "верхом сторінки" (лише один видимий) —
+       тому відступ прибираємо не лише в першого за порядком у DOM, а в
+       будь-якого активного розділу. */
+    #menu-content > section.active > .section-title { margin-top: 4px; }
+
+    /* Універсальна модель "вкладок" — і для головних розділів меню (кожен
+       <section> в #menu-content), і для підгруп всередині розділу (напр.
+       Лонги/Шоти в "Коктейлі"). Видима лише одна панель, перемикання —
+       через switchMainTab/switchSubTab, з анімацією "заїзду" збоку. */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    @keyframes tabSlideFromRight {
+      from { opacity: 0; transform: translateX(28px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes tabSlideFromLeft {
+      from { opacity: 0; transform: translateX(-28px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .tab-panel.active.slide-from-right { animation: tabSlideFromRight 0.25s ease; }
+    .tab-panel.active.slide-from-left { animation: tabSlideFromLeft 0.25s ease; }
+
+    /* Порожній розділ (ще не заповнили позиціями) — дружнє повідомлення
+       замість голої порожнечі. Текст додає JS (renderMenu). */
+    .empty-section-note {
+      color: var(--secondary);
+      font-size: 14px;
+      text-align: center;
+      padding: 24px 4px;
+    }
 
     /* Локальний перемикач вкладок всередині розділу (напр. Лонги/Шоти
        в "Коктейлі"). "Липкий" (sticky) — щоб залишався в полі зору, коли
@@ -409,19 +445,6 @@
       margin: 20px 4px 6px;
     }
 
-    .subgroup-panel { display: none; }
-    .subgroup-panel.active { display: block; }
-
-    @keyframes subgroupSlideFromRight {
-      from { opacity: 0; transform: translateX(28px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-    @keyframes subgroupSlideFromLeft {
-      from { opacity: 0; transform: translateX(-28px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-    .subgroup-panel.active.slide-from-right { animation: subgroupSlideFromRight 0.25s ease; }
-    .subgroup-panel.active.slide-from-left { animation: subgroupSlideFromLeft 0.25s ease; }
 
     /* ================= РЯДОК ТОВАРУ ================= */
     .item-row {
@@ -858,16 +881,14 @@
 
     <div class="chips-wrap" id="chipsWrap">
       <div class="chips-bar" id="chipsBar">
-        <a href="#cocktails" class="chip">Коктейлі</a>
-        <!-- Тимчасово приховано: в категорії "Напої" зараз немає позицій.
-             Щоб повернути — приберіть цей коментар і коментар навколо
-             <section id="drinks"> нижче.
-        <a href="#drinks" class="chip">Напої</a>
-        -->
-        <a href="#beer" class="chip">Пиво</a>
-        <a href="#snacks" class="chip">Снеки</a>
-        <a href="#nastoyanky" class="chip">Настоянки</a>
-        <a href="#liqueurs" class="chip">Лікери</a>
+        <button type="button" class="chip active" data-tab="cocktails" onclick="switchMainTab('cocktails')">Коктейлі</button>
+        <button type="button" class="chip" data-tab="strong-alcohol" onclick="switchMainTab('strong-alcohol')">Міцний алкоголь</button>
+        <button type="button" class="chip" data-tab="tinctures" onclick="switchMainTab('tinctures')">Крафтові настоянки</button>
+        <button type="button" class="chip" data-tab="beer" onclick="switchMainTab('beer')">Пиво</button>
+        <button type="button" class="chip" data-tab="wine" onclick="switchMainTab('wine')">Вино</button>
+        <button type="button" class="chip" data-tab="nonalcohol" onclick="switchMainTab('nonalcohol')">Безалкогольне</button>
+        <button type="button" class="chip" data-tab="snacks" onclick="switchMainTab('snacks')">Снеки</button>
+        <button type="button" class="chip" data-tab="extras" onclick="switchMainTab('extras')">Додатки</button>
       </div>
       <div class="chips-fade chips-fade-left">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
@@ -889,11 +910,11 @@
   </button>
 
   <div id="menu-content">
-    <section id="cocktails">
+    <section id="cocktails" class="tab-panel active" data-subtabs="longs,shots">
       <h2 class="section-title">Коктейлі</h2>
-      <div class="subgroup-nav" id="cocktailSubnav">
-        <button type="button" class="subgroup-chip active" data-tab="longs" onclick="switchCocktailTab('longs')">Лонги</button>
-        <button type="button" class="subgroup-chip" data-tab="shots" onclick="switchCocktailTab('shots')">Шоти</button>
+      <div class="subgroup-nav" id="cocktailsSubnav">
+        <button type="button" class="subgroup-chip active" data-tab="longs" onclick="switchSubTab('cocktails', 'longs')">Лонги</button>
+        <button type="button" class="subgroup-chip" data-tab="shots" onclick="switchSubTab('cocktails', 'shots')">Шоти</button>
       </div>
       <div class="subgroup-panel active" data-tab-panel="longs">
         <h3 class="subgroup-title">Лонги</h3>
@@ -904,11 +925,52 @@
         <div class="items-list" id="menu-shots"></div>
       </div>
     </section>
-    <!-- <section id="drinks"><h2 class="section-title">Напої</h2><div class="items-list" id="menu-drinks"></div></section> -->
-    <section id="beer"><h2 class="section-title">Пиво</h2><div class="items-list" id="menu-beer"></div></section>
-    <section id="snacks"><h2 class="section-title">Снеки</h2><div class="items-list" id="menu-snacks"></div></section>
-    <section id="nastoyanky"><h2 class="section-title">Настоянки</h2><div class="items-list" id="menu-nastoyanky"></div></section>
-    <section id="liqueurs"><h2 class="section-title">Лікери</h2><div class="items-list" id="menu-liqueurs"></div></section>
+
+    <section id="strong-alcohol" class="tab-panel">
+      <h2 class="section-title">Міцний алкоголь</h2>
+      <div class="items-list" id="menu-strongAlcohol"></div>
+    </section>
+
+    <section id="tinctures" class="tab-panel" data-subtabs="nastoyanky,liqueurs">
+      <h2 class="section-title">Крафтові настоянки</h2>
+      <div class="subgroup-nav" id="tincturesSubnav">
+        <button type="button" class="subgroup-chip active" data-tab="nastoyanky" onclick="switchSubTab('tinctures', 'nastoyanky')">Настоянки</button>
+        <button type="button" class="subgroup-chip" data-tab="liqueurs" onclick="switchSubTab('tinctures', 'liqueurs')">Лікери</button>
+      </div>
+      <div class="subgroup-panel active" data-tab-panel="nastoyanky">
+        <h3 class="subgroup-title">Настоянки</h3>
+        <div class="items-list" id="menu-nastoyanky"></div>
+      </div>
+      <div class="subgroup-panel" data-tab-panel="liqueurs">
+        <h3 class="subgroup-title">Лікери</h3>
+        <div class="items-list" id="menu-liqueurs"></div>
+      </div>
+    </section>
+
+    <section id="beer" class="tab-panel">
+      <h2 class="section-title">Пиво</h2>
+      <div class="items-list" id="menu-beer"></div>
+    </section>
+
+    <section id="wine" class="tab-panel">
+      <h2 class="section-title">Вино</h2>
+      <div class="items-list" id="menu-wine"></div>
+    </section>
+
+    <section id="nonalcohol" class="tab-panel">
+      <h2 class="section-title">Безалкогольне</h2>
+      <div class="items-list" id="menu-nonAlcohol"></div>
+    </section>
+
+    <section id="snacks" class="tab-panel">
+      <h2 class="section-title">Снеки</h2>
+      <div class="items-list" id="menu-snacks"></div>
+    </section>
+
+    <section id="extras" class="tab-panel">
+      <h2 class="section-title">Додатки</h2>
+      <div class="items-list" id="menu-extras"></div>
+    </section>
   </div>
 
   <div id="modal" onclick="this.style.display='none'; document.body.style.overflow='auto'">
@@ -1041,7 +1103,7 @@
   <!-- Версія у query-параметрі — щоб мобільний Safari та GitHub Pages CDN
        не віддавали закешовану стару версію файлу після зміни меню.
        Змінюйте цей номер щоразу, коли редагуєте menu-data.js. -->
-  <script src="menu-data.js?v=20260905"></script>
+  <script src="menu-data.js?v=20260906"></script>
   <script>
     const VOLUME_ICON = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l-1.5 15a2 2 0 0 1-2 1.8h-5a2 2 0 0 1-2-1.8L6 3Z"/><path d="M5 3h14"/></svg>`;
 
@@ -1079,20 +1141,20 @@
     // в назві/описі. Позиції з полем boost:true (у menu-data.js) отримують
     // бонус до рахунку — так можна чесно частіше пропонувати те, що погано
     // продається, серед варіантів, які й так підходять під запит гостя.
-    const MOOD_RECOMMEND_CATEGORIES = ['cocktails', 'drinks', 'beer', 'shots', 'liqueurs', 'nastoyanky'];
+    const MOOD_RECOMMEND_CATEGORIES = ['cocktails', 'beer', 'shots', 'liqueurs', 'nastoyanky'];
     const MOOD_CATEGORY_LABELS = {
-      cocktails: 'Коктейлі', drinks: 'Напої', beer: 'Пиво',
+      cocktails: 'Коктейлі', beer: 'Пиво',
       shots: 'Шоти', liqueurs: 'Лікери', nastoyanky: 'Настоянки'
     };
     const MOOD_WEIGHTS = {
-      bright: { shots: 3, cocktails: 2, drinks: 1 },
+      bright: { shots: 3, cocktails: 2 },
       chill: { beer: 3, liqueurs: 2, nastoyanky: 1 },
       romance: { cocktails: 3, liqueurs: 2 },
       wild: { shots: 3, nastoyanky: 3, cocktails: 1 }
     };
     const STRENGTH_WEIGHTS = {
       light: { beer: 3, liqueurs: 2, cocktails: 1 },
-      medium: { cocktails: 3, drinks: 2, beer: 1 },
+      medium: { cocktails: 3, beer: 1 },
       strong: { shots: 3, nastoyanky: 3 },
       any: {}
     };
@@ -1212,6 +1274,12 @@
 
     Object.entries(menuData).forEach(([key, items]) => renderMenu(items, `menu-${key}`));
 
+    document.querySelectorAll('.items-list').forEach(list => {
+      if (!list.children.length) {
+        list.innerHTML = '<div class="empty-section-note">Розділ у розробці — скоро тут з’явиться меню.</div>';
+      }
+    });
+
     // Підказка, що панель категорій прокручується далі за межі екрана:
     // затемнення з того краю, куди ще можна прокрутити.
     const chipsWrap = document.getElementById('chipsWrap');
@@ -1247,27 +1315,22 @@
     updateOpenStatus();
     setInterval(updateOpenStatus, 60000);
 
-    // Раздели йдуть у DOM у тому ж порядку, що й на сторінці — це і є
-    // джерело правди для того, який розділ зараз під шапкою.
-    const sections = Array.from(document.querySelectorAll('section'));
-    const navLinks = document.querySelectorAll('.chip');
     const navbarEl = document.querySelector('.navbar');
 
     // Якщо натиснута вкладка виглядає лише наполовину (обрізана краєм
     // панелі), докручуємо панель категорій так, щоб вона стала повністю
-    // видимою. block: 'nearest' не займає вертикальний скролл — той і так
-    // веде до розділу через звичайний перехід по #якір.
-    navLinks.forEach(link => {
+    // видимою.
+    document.querySelectorAll('.chip').forEach(link => {
       link.addEventListener('click', () => {
         link.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
       });
     });
 
     // Банер анонсу згортається під час скролу (див. updateAnnounceVisibility
-    // нижче), тому "жива" висота шапки то більша, то менша. Якщо рахувати
-    // відступ під поточний (іноді ще розгорнутий) стан, після скролу до
-    // якоря шапка встигає згорнутися й розділ підсвічується не той —
-    // тому тут завжди рахуємо офсет так, ніби банер уже згорнутий.
+    // нижче), тому "жива" висота шапки то більша, то менша. Липка навігація
+    // підгруп (Лонги/Шоти, Настоянки/Лікери) має прилипати одразу під
+    // головною шапкою, тому рахуємо офсет так, ніби банер уже згорнутий —
+    // інакше вона або перекриє чіпси категорій, або "провисне".
     function getHeaderOffset() {
       let height = navbarEl ? navbarEl.offsetHeight : 0;
       if (announceBanner && !announceBanner.classList.contains('collapsed')) {
@@ -1283,26 +1346,9 @@
       document.documentElement.style.scrollPaddingTop = getHeaderOffset() + 'px';
     }
 
-    // Липка навігація підгруп (Лонги/Шоти) має прилипати одразу під
-    // головною шапкою — а не під верхом екрана, інакше вона перекриє
-    // головні чіпси категорій. Відступ той самий, що й для скролу.
     function updateSubnavOffset() {
-      const subnav = document.getElementById('cocktailSubnav');
-      if (subnav) subnav.style.top = getHeaderOffset() + 'px';
-    }
-
-    function updateActiveChip() {
-      const scrollPos = window.scrollY + getHeaderOffset() + 1;
-      let currentId = sections[0] && sections[0].id;
-      for (const section of sections) {
-        if (section.offsetTop <= scrollPos) {
-          currentId = section.id;
-        } else {
-          break;
-        }
-      }
-      navLinks.forEach(link => {
-        link.classList.toggle('active', link.getAttribute('href') === `#${currentId}`);
+      document.querySelectorAll('.subgroup-nav').forEach(subnav => {
+        subnav.style.top = getHeaderOffset() + 'px';
       });
     }
 
@@ -1331,47 +1377,71 @@
       updateSubnavOffset();
     }
 
-    // Перемикання вкладок Лонги/Шоти всередині розділу "Коктейлі".
-    // Показуємо лише одну панель, друга анімовано "заїжджає" збоку —
-    // напрямок залежить від того, яка вкладка лівіше в навігації.
-    const COCKTAIL_TAB_ORDER = ['longs', 'shots'];
-    function switchCocktailTab(tab) {
-      const current = document.querySelector('.subgroup-panel.active');
+    // Перемикання головних розділів меню (Коктейлі, Пиво, Вино і т.д.).
+    // Видима лише одна секція, решта — display:none. Друга "заїжджає"
+    // збоку — напрямок залежить від порядку розділів у навігації.
+    const MAIN_TAB_ORDER = ['cocktails', 'strong-alcohol', 'tinctures', 'beer', 'wine', 'nonalcohol', 'snacks', 'extras'];
+    function switchMainTab(tab) {
+      const current = document.querySelector('#menu-content > section.active');
+      const currentTab = current ? current.id : null;
+      if (currentTab === tab) return;
+
+      const direction = MAIN_TAB_ORDER.indexOf(tab) > MAIN_TAB_ORDER.indexOf(currentTab) ? 'right' : 'left';
+
+      document.querySelectorAll('.chips-bar > .chip').forEach(chip => {
+        chip.classList.toggle('active', chip.dataset.tab === tab);
+      });
+      document.querySelectorAll('#menu-content > section').forEach(section => {
+        section.classList.remove('active', 'slide-from-right', 'slide-from-left');
+        if (section.id === tab) {
+          section.classList.add('active', direction === 'right' ? 'slide-from-right' : 'slide-from-left');
+        }
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Перемикання підгруп всередині розділу (Лонги/Шоти в "Коктейлі",
+    // Настоянки/Лікери в "Крафтових настоянках") — той самий принцип,
+    // але scope обмежений одним розділом, щоб дві незалежні пари вкладок
+    // не заважали одна одній.
+    function switchSubTab(sectionId, tab) {
+      const section = document.getElementById(sectionId);
+      if (!section) return;
+      const order = (section.dataset.subtabs || '').split(',');
+      const current = section.querySelector('.subgroup-panel.active');
       const currentTab = current ? current.dataset.tabPanel : null;
       if (currentTab === tab) return;
 
-      const direction = COCKTAIL_TAB_ORDER.indexOf(tab) > COCKTAIL_TAB_ORDER.indexOf(currentTab) ? 'right' : 'left';
+      const direction = order.indexOf(tab) > order.indexOf(currentTab) ? 'right' : 'left';
 
-      document.querySelectorAll('.subgroup-chip').forEach(btn => {
+      section.querySelectorAll('.subgroup-chip').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.tab === tab);
       });
-      document.querySelectorAll('.subgroup-panel').forEach(panel => {
+      section.querySelectorAll('.subgroup-panel').forEach(panel => {
         panel.classList.remove('active', 'slide-from-right', 'slide-from-left');
         if (panel.dataset.tabPanel === tab) {
           panel.classList.add('active', direction === 'right' ? 'slide-from-right' : 'slide-from-left');
         }
       });
 
-      // Списки Лонги/Шоти різної довжини — якщо не піднятись нагору розділу,
-      // та сама позиція скролу може опинитись вже за межами коротшого списку
-      // (і показати наступний розділ "Пиво" замість щойно обраної вкладки).
-      const cocktailsSection = document.getElementById('cocktails');
-      if (cocktailsSection) cocktailsSection.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      // Підгрупи різної довжини — якщо не піднятись нагору розділу, та сама
+      // позиція скролу може опинитись вже за межами коротшого списку.
+      section.scrollIntoView({ block: 'start', behavior: 'smooth' });
     }
 
     let ticking = false;
     function onScroll() {
       if (!ticking) {
-        requestAnimationFrame(() => { updateActiveChip(); updateAnnounceVisibility(); ticking = false; });
+        requestAnimationFrame(() => { updateAnnounceVisibility(); ticking = false; });
         ticking = true;
       }
     }
 
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', () => { updateScrollPadding(); updateActiveChip(); updateSubnavOffset(); });
+    window.addEventListener('resize', () => { updateScrollPadding(); updateSubnavOffset(); });
 
     updateScrollPadding();
-    updateActiveChip();
     updateAnnounceVisibility();
     updateSubnavOffset();
 

@@ -14,13 +14,16 @@ const menuData = {
     { name: 'СИНІЙ КАМІКАДЗЕ', desc: 'ГОРІЛКА/ ЛИМОННИЙ СІК/ BLUE CURASAO', volume: '150 мл', price: '100 ₴', img: '' },
     { name: 'АНАСТЕЙША', desc: 'БІЛИЙ РОМ/ SPRITE/ ЛИМОННИЙ СІК/ BLUE CERASAO', volume: '300 мл', price: '180 ₴', img: '' }
   ],
-  drinks: [],
+  strongAlcohol: [],
   beer: [
     { name: 'Dunkel', desc: 'ТЕМНЕ', volume: '500 мл', price: '80 ₴', img: '' },
     { name: 'Staropramen з/б', desc: '', volume: '500 мл', price: '80 ₴', img: '' },
     { name: 'Львівське Фірмове', desc: 'СВІТЛЕ', volume: '500 мл', price: '80 ₴', img: '' },
     { name: 'Blanche 1664 б/а', desc: '', volume: '300 мл', price: '80 ₴', img: '' }
   ],
+  wine: [],
+  nonAlcohol: [],
+  extras: [],
   shots: [
     { name: 'ПАН ІВАН', desc: 'ГОРІЛКА / ЛИМОННИЙ СІК / ГРЕНАДИН', volume: '50 мл', price: '50 ₴', img: '' },
     { name: 'ПРАПОР', desc: 'ГОРІЛКА / ЛІКЕР АПЕЛЬСИНОВИЙ', volume: '50 мл', price: '50 ₴', img: '' },
