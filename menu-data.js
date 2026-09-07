@@ -14,16 +14,6 @@ const menuData = {
     { name: 'СИНІЙ КАМІКАДЗЕ', desc: 'ГОРІЛКА/ ЛИМОННИЙ СІК/ BLUE CURASAO', volume: '150 мл', price: '100 ₴', img: '' },
     { name: 'АНАСТЕЙША', desc: 'БІЛИЙ РОМ/ SPRITE/ ЛИМОННИЙ СІК/ BLUE CERASAO', volume: '300 мл', price: '180 ₴', img: '' }
   ],
-  strongAlcohol: [],
-  beer: [
-    { name: 'Dunkel', desc: 'ТЕМНЕ', volume: '500 мл', price: '80 ₴', img: '' },
-    { name: 'Staropramen з/б', desc: '', volume: '500 мл', price: '80 ₴', img: '' },
-    { name: 'Львівське Фірмове', desc: 'СВІТЛЕ', volume: '500 мл', price: '80 ₴', img: '' },
-    { name: 'Blanche 1664 б/а', desc: '', volume: '300 мл', price: '80 ₴', img: '' }
-  ],
-  wine: [],
-  nonAlcohol: [],
-  extras: [],
   shots: [
     { name: 'ПАН ІВАН', desc: 'ГОРІЛКА / ЛИМОННИЙ СІК / ГРЕНАДИН', volume: '50 мл', price: '50 ₴', img: '' },
     { name: 'ПРАПОР', desc: 'ГОРІЛКА / ЛІКЕР АПЕЛЬСИНОВИЙ', volume: '50 мл', price: '50 ₴', img: '' },
@@ -33,12 +23,31 @@ const menuData = {
     { name: 'ВЕРШКОВИЙ МАРЦИПАН', desc: 'БЕЙЛІЗ/ АМАРЕТТО', volume: '50 МЛ', price: '100 ₴', img: '' },
     { name: 'ІНТЕРСІТІ', desc: 'СЕТ З ДЕСЯТИ ШОТІВ КРАФТОВИХ НАСТОЯНОК 20% ТА 40%', volume: '500 МЛ', price: '500 ₴', img: '' }
   ],
-  snacks: [
-    { name: 'КАРТОПЛЯ ФРІ', desc: '', volume: '200 гр', price: '120 ₴', img: '' },
-    { name: 'НАГЕТСИ', desc: '', volume: '6 шт', price: '140 ₴', img: '' },
-    { name: 'ЦИБУЛЕВІ КІЛЬЦЯ', desc: '', volume: '10 шт', price: '150 ₴', img: '' },
-    { name: 'АРАХІС BigBob', desc: 'смаки в асортименті', volume: '60 гр', price: '50 ₴', img: '' },
-    { name: 'ЧИПСИ LAY\'S', desc: 'смаки в асортименті', volume: '60 гр', price: '80 ₴', img: '' }
+  strongAlcohol: [
+    { name: 'Ром Captain Morgan Spiced Gold', desc: '', volume: '50 мл', price: '90 ₴', img: '' },
+    { name: 'Ром Captain Morgan TIKI', desc: '', volume: '50 мл', price: '90 ₴', img: '' },
+    { name: 'Ром Oakheart Original 35%', desc: '', volume: '50 мл', price: '90 ₴', img: '' },
+    { name: 'Ром Bacardi CartaBianca', desc: '', volume: '50 мл', price: '90 ₴', img: '' },
+    { name: 'Текіла Sierra Blanko', desc: '', volume: '50 мл', price: '100 ₴', img: '' },
+    { name: 'Віскі Jameson', desc: '', volume: '50 мл', price: '120 ₴', img: '' },
+    { name: 'Віскі Jack Daniels', desc: '', volume: '50 мл', price: '120 ₴', img: '' },
+    { name: 'Віскі Paddy', desc: '', volume: '50 мл', price: '100 ₴', img: '' },
+    { name: 'Бурбон Jim Beam White', desc: '', volume: '50 мл', price: '100 ₴', img: '' },
+    { name: 'Бурбон Jim Beam Red Stag', desc: '', volume: '50 мл', price: '100 ₴', img: '' },
+    { name: 'Джин Finsbury Platinum 47%', desc: '', volume: '50 мл', price: '90 ₴', img: '' },
+    { name: 'Джин Finsbury Wild Strawberry', desc: '', volume: '50 мл', price: '90 ₴', img: '' },
+    { name: 'Лікер Jagermeister', desc: '', volume: '50 мл', price: '100 ₴', img: '' },
+    { name: 'Лікер Jagermeister Orange', desc: '', volume: '50 мл', price: '100 ₴', img: '' },
+    { name: 'Настоянка Becherovka', desc: '', volume: '50 мл', price: '80 ₴', img: '' },
+    { name: 'Лікер Baileys', desc: '', volume: '50 мл', price: '110 ₴', img: '' },
+    { name: 'Лікер SAMBUCA', desc: '', volume: '50 мл', price: '100 ₴', img: '' },
+    { name: 'Абсент', desc: '', volume: '50 мл', price: '100 ₴', img: '' },
+    { name: 'Бренді Couronnier Napoleon', desc: '', volume: '50 мл', price: '70 ₴', img: '' },
+    { name: 'Горілка Хортиця', desc: '', volume: '50 мл', price: '30 ₴', img: '' },
+    { name: 'Вермут Martini Rosso', desc: '', volume: '50 мл', price: '70 ₴', img: '' },
+    { name: 'Лікер Амаретто SanMartino', desc: '', volume: '50 мл', price: '70 ₴', img: '' },
+    { name: 'Лікер Вишневий SanMartino', desc: '', volume: '50 мл', price: '70 ₴', img: '' },
+    { name: 'Лікер Лімончелло SanMartino', desc: '', volume: '50 мл', price: '70 ₴', img: '' }
   ],
   nastoyanky: [
     { name: 'ЗЕЛЕНИЙ ЗМІЙ', desc: '40%', volume: '50 мл', price: '50 ₴', img: '' },
@@ -70,5 +79,38 @@ const menuData = {
     { name: 'БАРБАРИС', desc: '20%', volume: '50 мл', price: '50 ₴', img: '' },
     { name: 'ЖУРАВЛИНА', desc: '20%', volume: '50 мл', price: '50 ₴', img: '' },
     { name: 'ЛИМОН М\'ЯТА', desc: '20%', volume: '50 мл', price: '50 ₴', img: '' }
+  ],
+  beer: [
+    { name: 'Львівське Фірмове', desc: 'СВІТЛЕ', volume: '500 мл', price: '80 ₴', img: '' },
+    { name: 'DUNKEL', desc: 'ТЕМНЕ', volume: '500 мл', price: '80 ₴', img: '' },
+    { name: 'STAROPRAMEN З/Б', desc: 'СВІТЛЕ', volume: '500 мл', price: '80 ₴', img: '' },
+    { name: 'Б/а Krounenbourg 1664', desc: '', volume: '0.33 мл', price: '80 ₴', img: '' }
+  ],
+  wine: [
+
+  ],
+  nonAlcohol: [
+    { name: 'Кава', desc: 'зварена в турці', volume: '', price: '60 ₴', img: '' },
+    { name: 'Чай', desc: 'Чорний, зелений, трав\'яний, фруктовий', volume: '', price: '40 ₴', img: '' },
+    { name: 'Енергетичний напій Battery', desc: '', volume: '0.33 мл', price: '50 ₴', img: '' },
+    { name: 'Тонік SWEPPES', desc: '', volume: '250 мл', price: '40 ₴', img: '' },
+    { name: 'CocaCola', desc: '', volume: '250 мл', price: '40 ₴', img: '' },
+    { name: 'Sprite', desc: '', volume: '250 мл', price: '40 ₴', img: '' },
+    { name: 'Пиво Б/а Krounenbourg 1664', desc: '', volume: '0.33 мл', price: '80 ₴', img: '' },
+    { name: 'ЛИМОНАД', desc: 'смаки в асортименті', volume: '250 мл', price: '80 ₴', img: '' },
+    { name: 'СІК', desc: 'смаки в асортименті', volume: '250 мл', price: '50 ₴', img: '' }
+  ],
+  snacks: [
+    { name: 'КАРТОПЛЯ ФРІ', desc: '', volume: '200 гр', price: '120 ₴', img: '' },
+    { name: 'НАГЕТСИ', desc: '', volume: '6 шт', price: '140 ₴', img: '' },
+    { name: 'ЦИБУЛЕВІ КІЛЬЦЯ', desc: '', volume: '10 шт', price: '150 ₴', img: '' },
+    { name: 'АРАХІС BigBob', desc: 'смаки в асортименті', volume: '60 гр', price: '50 ₴', img: '' },
+    { name: 'ЧИПСИ LAY\'S', desc: 'смаки в асортименті', volume: '60 гр', price: '80 ₴', img: '' }
+  ],
+  extras: [
+    { name: 'АПЕЛЬСИН', desc: '', volume: '10 гр', price: '15 ₴', img: '' },
+    { name: 'ЛАЙМ', desc: '', volume: '10 гр', price: '10 ₴', img: '' },
+    { name: 'ЛИМОН', desc: '', volume: '10 гр', price: '10 ₴', img: '' },
+    { name: 'Вершки', desc: '', volume: '10 гр', price: '10 ₴', img: '' }
   ]
 };
