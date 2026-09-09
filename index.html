@@ -629,7 +629,7 @@
       font-size: 17px;
       font-weight: bold;
       text-align: center;
-      margin-bottom: 18px;
+      margin-bottom: 34px;
     }
 
     .mood-options {
@@ -639,6 +639,11 @@
     }
 
     .mood-option-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
       padding: 14px 8px;
       border-radius: 10px;
       border: 1px solid var(--gold-dim);
@@ -651,10 +656,11 @@
       appearance: none;
     }
     .mood-option-btn:hover, .mood-option-btn:active { background: rgba(230, 185, 62, 0.15); }
+    .mood-option-icon { font-size: 24px; line-height: 1; }
 
     .mood-close-x {
       display: block;
-      margin: 0 0 14px auto;
+      margin: 0 0 4px auto;
       background: transparent;
       border: none;
       color: var(--secondary);
@@ -774,6 +780,141 @@
       display: none;
     }
     .radio-status.show { display: block; }
+
+    /* ================= МІНІ-ГРА "ЗМІЙКА" ================= */
+    .game-btn {
+      position: fixed;
+      right: 16px;
+      bottom: 76px;
+      z-index: 1500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 2px solid var(--gold);
+      background: #14140f;
+      color: var(--gold);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+      cursor: pointer;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .game-btn svg { width: 24px; height: 24px; }
+
+    #snakeModal {
+      display: none; position: fixed; z-index: 2100; top: 0; left: 0;
+      width: 100%; height: 100%; background: rgba(0,0,0,0.95);
+      justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;
+      overflow-y: auto;
+    }
+
+    .snake-modal-content {
+      width: 100%;
+      max-width: 340px;
+      background: #14140f;
+      border: 1px solid var(--gold-dim);
+      border-radius: 16px;
+      padding: 20px;
+      box-sizing: border-box;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .snake-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .snake-title {
+      color: #fff;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .snake-score {
+      color: var(--gold);
+      font-weight: bold;
+      font-size: 15px;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .snake-board-wrap {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    #snakeCanvas {
+      background: #0a0a0b;
+      border: 1px solid var(--gold-dim);
+      border-radius: 8px;
+      touch-action: none;
+    }
+
+    .snake-overlay {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: rgba(10, 10, 11, 0.9);
+      border-radius: 8px;
+      text-align: center;
+      padding: 16px;
+      box-sizing: border-box;
+    }
+    .snake-overlay.show { display: flex; }
+    .snake-overlay-text { color: #fff; font-weight: bold; font-size: 15px; }
+
+    .snake-restart-btn {
+      padding: 10px 20px;
+      border-radius: 10px;
+      font: inherit;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      border: 1px solid var(--gold);
+      background: var(--gold);
+      color: #14140f;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .snake-dpad {
+      display: grid;
+      grid-template-columns: 52px 52px 52px;
+      grid-template-rows: 52px 52px 52px;
+      gap: 6px;
+      justify-content: center;
+      margin: 0 auto;
+    }
+
+    .snake-dpad-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      border: 1px solid var(--gold-dim);
+      background: rgba(230, 185, 62, 0.06);
+      color: var(--gold);
+      cursor: pointer;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .snake-dpad-btn:hover, .snake-dpad-btn:active { background: rgba(230, 185, 62, 0.15); }
+    .snake-dpad-btn svg { width: 22px; height: 22px; }
+    .snake-dpad-up { grid-column: 2; grid-row: 1; }
+    .snake-dpad-left { grid-column: 1; grid-row: 2; }
+    .snake-dpad-right { grid-column: 3; grid-row: 2; }
+    .snake-dpad-down { grid-column: 2; grid-row: 3; }
   </style>
 
   <meta name="description" content="ROCK HATA (Рок Хата) — рок-бар з живою музикою у Миколаєві, вул. Захисників Миколаєва 38/1. Коктейлі, крафтове пиво, настоянки, лікери, снеки. Щодня 16:00–23:00.">
@@ -999,10 +1140,10 @@
       <div class="mood-step" id="moodStepMood">
         <div class="mood-modal-question">Який у тебе настрій?</div>
         <div class="mood-options">
-          <button type="button" class="mood-option-btn" onclick="moodPick('mood','bright')">Бадьорий</button>
-          <button type="button" class="mood-option-btn" onclick="moodPick('mood','chill')">Спокійний</button>
-          <button type="button" class="mood-option-btn" onclick="moodPick('mood','romance')">Романтичний</button>
-          <button type="button" class="mood-option-btn" onclick="moodPick('mood','wild')">Хочу відірватись</button>
+          <button type="button" class="mood-option-btn" onclick="moodPick('mood','bright')"><span class="mood-option-icon">😄</span>Бадьорий</button>
+          <button type="button" class="mood-option-btn" onclick="moodPick('mood','chill')"><span class="mood-option-icon">😌</span>Спокійний</button>
+          <button type="button" class="mood-option-btn" onclick="moodPick('mood','romance')"><span class="mood-option-icon">😍</span>Романтичний</button>
+          <button type="button" class="mood-option-btn" onclick="moodPick('mood','wild')"><span class="mood-option-icon">🥳</span>Хочу відірватись</button>
         </div>
       </div>
 
@@ -1036,6 +1177,44 @@
       </div>
     </div>
   </div>
+
+  <div id="snakeModal" onclick="if (event.target === this) closeSnakeModal()">
+    <div class="snake-modal-content">
+      <div class="snake-header">
+        <span class="snake-title">Змійка</span>
+        <button type="button" class="mood-close-x" aria-label="Закрити" onclick="closeSnakeModal()">&times;</button>
+      </div>
+      <div class="snake-score" id="snakeScore">Очки: 0</div>
+      <div class="snake-board-wrap">
+        <canvas id="snakeCanvas" width="288" height="288"></canvas>
+        <div class="snake-overlay" id="snakeOverlay">
+          <div class="snake-overlay-text" id="snakeOverlayText">Гру завершено</div>
+          <button type="button" class="snake-restart-btn" onclick="startSnakeGame()">Заново</button>
+        </div>
+      </div>
+      <div class="snake-dpad">
+        <button type="button" class="snake-dpad-btn snake-dpad-up" onclick="snakeSetDirection(0,-1)" aria-label="Вгору">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+        </button>
+        <button type="button" class="snake-dpad-btn snake-dpad-left" onclick="snakeSetDirection(-1,0)" aria-label="Ліворуч">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        </button>
+        <button type="button" class="snake-dpad-btn snake-dpad-right" onclick="snakeSetDirection(1,0)" aria-label="Праворуч">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <button type="button" class="snake-dpad-btn snake-dpad-down" onclick="snakeSetDirection(0,1)" aria-label="Вниз">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <button type="button" class="game-btn" onclick="openSnakeModal()" aria-label="Міні-гра «Змійка»" title="Міні-гра «Змійка»">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 7c3 0 3 3.5 6 3.5S13 7 16 7s3 3.5 3 3.5"/>
+      <path d="M4 17c3 0 3-3.5 6-3.5s3 3.5 6 3.5 3-3.5 3-3.5"/>
+    </svg>
+  </button>
 
   <a class="feedback-btn"
      href="https://t.me/O1010100001?text=Добрий день! Хочу залишити відгук/скаргу щодо ROCK HATA:%0A"
@@ -1366,9 +1545,21 @@
       }
     }
 
+    // Коли switchMainTab примусово скидає скрол на 0 (не через реальний
+    // жест користувача), це не повинно розгортати назад уже згорнутий
+    // банер анонсу — інакше шапка сама по собі виростає власною
+    // CSS-анімацією саме тоді, коли одночасно "заїжджає" новий розділ, і
+    // це виглядає, ніби вся конструкція сторінки дриґається. Прапорець
+    // гасить рівно один наступний перерахунок видимості банера.
+    let suppressAnnounceRecompute = false;
+
     function updateAnnounceVisibility() {
       if (!announceBanner) return;
-      announceBanner.classList.toggle('collapsed', window.scrollY > ANNOUNCE_HIDE_THRESHOLD);
+      if (suppressAnnounceRecompute) {
+        suppressAnnounceRecompute = false;
+      } else {
+        announceBanner.classList.toggle('collapsed', window.scrollY > ANNOUNCE_HIDE_THRESHOLD);
+      }
       updateSubnavOffset();
     }
 
@@ -1404,6 +1595,7 @@
       // новий, можливо короткий, розділ) — скролимо миттєво ДО підміни
       // DOM, з тих самих причин, що й раніше.
       if (window.scrollY > 0) {
+        suppressAnnounceRecompute = true;
         window.scrollTo({ top: 0, behavior: 'instant' });
       }
 
@@ -1479,7 +1671,7 @@
       let startX = 0, startY = 0, startTime = 0, tracking = false, axis = null;
 
       function onTouchStart(e) {
-        if (e.target.closest('.chips-bar, #modal, #announceModal, #moodModal')) {
+        if (e.target.closest('.chips-bar, #modal, #announceModal, #moodModal, #snakeModal')) {
           tracking = false;
           return;
         }
@@ -1564,15 +1756,158 @@
     updateAnnounceVisibility();
     updateSubnavOffset();
 
-    // Esc закриває будь-яку відкриту модалку (фото товару, афіша анонсу, підбір напою).
+    // Esc закриває будь-яку відкриту модалку (фото товару, афіша анонсу, підбір напою, змійка).
     window.addEventListener('keydown', (e) => {
       if (e.key !== 'Escape') return;
       const modal = document.getElementById('modal');
       const announceModal = document.getElementById('announceModal');
       const moodModal = document.getElementById('moodModal');
+      const snakeModal = document.getElementById('snakeModal');
       if (modal.style.display === 'flex') { modal.style.display = 'none'; document.body.style.overflow = 'auto'; }
       if (announceModal.style.display === 'flex') closeAnnounceModal();
       if (moodModal.style.display === 'flex') closeMoodModal();
+      if (snakeModal.style.display === 'flex') closeSnakeModal();
+    });
+
+    // ================= МІНІ-ГРА "ЗМІЙКА" =================
+    // Гравець — зелена змійка, збирає "напої" (плюс очко й довжина),
+    // за арахіс у кепці — мінус очко (без зміни довжини). Поле — 16x16
+    // клітинок по 18px. Керування: D-pad під полем або стрілки/WASD.
+    const SNAKE_GRID = 16;
+    const SNAKE_CELL = 18;
+    const SNAKE_TICK_MS = 140;
+    const SNAKE_GOOD_EMOJI = ['🍺', '🥤', '🍹'];
+    const SNAKE_BAD_EMOJI = '🥜';
+
+    let snakeCanvas, snakeCtx;
+    let snakeBody, snakeDir, snakeNextDir, snakeGood, snakeBad, snakeScore, snakeTimer, snakeAlive;
+
+    function snakeRandomCell(occupied) {
+      let cell;
+      do {
+        cell = { x: Math.floor(Math.random() * SNAKE_GRID), y: Math.floor(Math.random() * SNAKE_GRID) };
+      } while (occupied.some(c => c.x === cell.x && c.y === cell.y));
+      return cell;
+    }
+
+    function openSnakeModal() {
+      document.getElementById('snakeModal').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+      if (!snakeCanvas) {
+        snakeCanvas = document.getElementById('snakeCanvas');
+        snakeCtx = snakeCanvas.getContext('2d');
+      }
+      startSnakeGame();
+    }
+
+    function closeSnakeModal() {
+      document.getElementById('snakeModal').style.display = 'none';
+      document.body.style.overflow = 'auto';
+      clearInterval(snakeTimer);
+    }
+
+    function startSnakeGame() {
+      clearInterval(snakeTimer);
+      document.getElementById('snakeOverlay').classList.remove('show');
+      snakeBody = [{ x: 7, y: 8 }, { x: 6, y: 8 }, { x: 5, y: 8 }];
+      snakeDir = { x: 1, y: 0 };
+      snakeNextDir = { x: 1, y: 0 };
+      snakeScore = 0;
+      snakeAlive = true;
+      snakeGood = Object.assign(snakeRandomCell(snakeBody), { emoji: SNAKE_GOOD_EMOJI[Math.floor(Math.random() * SNAKE_GOOD_EMOJI.length)] });
+      snakeBad = snakeRandomCell(snakeBody.concat([snakeGood]));
+      updateSnakeScore();
+      drawSnake();
+      snakeTimer = setInterval(snakeTick, SNAKE_TICK_MS);
+    }
+
+    function updateSnakeScore() {
+      document.getElementById('snakeScore').textContent = 'Очки: ' + snakeScore;
+    }
+
+    function snakeSetDirection(x, y) {
+      if (!snakeAlive) return;
+      // не даємо розвернутись на 180° в той самий рух, що вже виконується
+      if (snakeDir.x === -x && snakeDir.y === -y) return;
+      snakeNextDir = { x, y };
+    }
+
+    function snakeTick() {
+      snakeDir = snakeNextDir;
+      const head = snakeBody[0];
+      const newHead = { x: head.x + snakeDir.x, y: head.y + snakeDir.y };
+
+      if (
+        newHead.x < 0 || newHead.x >= SNAKE_GRID ||
+        newHead.y < 0 || newHead.y >= SNAKE_GRID ||
+        snakeBody.some(c => c.x === newHead.x && c.y === newHead.y)
+      ) {
+        snakeGameOver();
+        return;
+      }
+
+      snakeBody.unshift(newHead);
+
+      let grew = false;
+      if (newHead.x === snakeGood.x && newHead.y === snakeGood.y) {
+        snakeScore++;
+        grew = true;
+        snakeGood = Object.assign(snakeRandomCell(snakeBody.concat([snakeBad])), { emoji: SNAKE_GOOD_EMOJI[Math.floor(Math.random() * SNAKE_GOOD_EMOJI.length)] });
+      } else if (newHead.x === snakeBad.x && newHead.y === snakeBad.y) {
+        snakeScore = Math.max(0, snakeScore - 1);
+        snakeBad = snakeRandomCell(snakeBody.concat([snakeGood]));
+      }
+
+      if (!grew) snakeBody.pop();
+
+      updateSnakeScore();
+      drawSnake();
+    }
+
+    function snakeGameOver() {
+      snakeAlive = false;
+      clearInterval(snakeTimer);
+      document.getElementById('snakeOverlayText').textContent = 'Гру завершено — очки: ' + snakeScore;
+      document.getElementById('snakeOverlay').classList.add('show');
+    }
+
+    function drawSnake() {
+      const ctx = snakeCtx;
+      ctx.clearRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+
+      snakeBody.forEach((seg, i) => {
+        ctx.fillStyle = i === 0 ? '#8fe388' : '#4caf50';
+        ctx.fillRect(seg.x * SNAKE_CELL + 1, seg.y * SNAKE_CELL + 1, SNAKE_CELL - 2, SNAKE_CELL - 2);
+      });
+
+      ctx.font = (SNAKE_CELL - 2) + 'px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(snakeGood.emoji, snakeGood.x * SNAKE_CELL + SNAKE_CELL / 2, snakeGood.y * SNAKE_CELL + SNAKE_CELL / 2 + 1);
+      ctx.fillText(SNAKE_BAD_EMOJI, snakeBad.x * SNAKE_CELL + SNAKE_CELL / 2, snakeBad.y * SNAKE_CELL + SNAKE_CELL / 2 + 1);
+
+      // невеличка "кепка" на арахісі — трикутник зверху горіха
+      ctx.fillStyle = '#d32f2f';
+      ctx.beginPath();
+      const bx = snakeBad.x * SNAKE_CELL + SNAKE_CELL / 2;
+      const by = snakeBad.y * SNAKE_CELL + 3;
+      ctx.moveTo(bx - 5, by + 3);
+      ctx.lineTo(bx + 5, by + 3);
+      ctx.lineTo(bx, by - 3);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (document.getElementById('snakeModal').style.display !== 'flex') return;
+      const dirMap = {
+        ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowRight: [1, 0],
+        w: [0, -1], s: [0, 1], a: [-1, 0], d: [1, 0]
+      };
+      const dir = dirMap[e.key];
+      if (!dir) return;
+      e.preventDefault();
+      snakeSetDirection(dir[0], dir[1]);
     });
   </script>
 </body>
