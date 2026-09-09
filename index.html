@@ -42,6 +42,13 @@
       scroll-behavior: smooth;
       scroll-padding-top: 110px;
       height: 101%;
+      /* Банер анонсу над контентом сам анімовано згортається (max-height
+         0.5s) — без цього браузерний "scroll anchoring" підтягує scrollY
+         ближче до нуля, щоб компенсувати місце, що звільнилось, а це через
+         нашу ж логіку "scrollY < порогу — показати банер" розгортає його
+         назад. Вимикаємо якорення на рівні всієї сторінки — його самого
+         на банері замало, бо якорем браузер може обрати й інший елемент. */
+      overflow-anchor: none;
     }
 
     body {
@@ -1376,17 +1383,20 @@
     // жест користувача), це не повинно розгортати назад уже згорнутий
     // банер анонсу — інакше шапка сама по собі виростає власною
     // CSS-анімацією саме тоді, коли одночасно "заїжджає" новий розділ, і
-    // це виглядає, ніби вся конструкція сторінки дриґається. Прапорець
-    // гасить рівно один наступний перерахунок видимості банера.
-    let suppressAnnounceRecompute = false;
+    // це виглядає, ніби вся конструкція сторінки дриґається. На один
+    // програмний scrollTo(0) браузер іноді встигає надіслати не одну, а
+    // кілька подій scroll (кожна з уже правдивим scrollY===0) — тому
+    // гасимо перерахунок не на рівно один виклик, а на короткий проміжок
+    // часу, що покриває їх усі.
+    let suppressAnnounceUntil = 0;
 
     function updateAnnounceVisibility() {
       if (!announceBanner) return;
-      if (suppressAnnounceRecompute) {
-        suppressAnnounceRecompute = false;
-      } else {
-        announceBanner.classList.toggle('collapsed', window.scrollY > ANNOUNCE_HIDE_THRESHOLD);
+      if (performance.now() < suppressAnnounceUntil) {
+        updateSubnavOffset();
+        return;
       }
+      announceBanner.classList.toggle('collapsed', window.scrollY > ANNOUNCE_HIDE_THRESHOLD);
       updateSubnavOffset();
     }
 
@@ -1422,7 +1432,7 @@
       // новий, можливо короткий, розділ) — скролимо миттєво ДО підміни
       // DOM, з тих самих причин, що й раніше.
       if (window.scrollY > 0) {
-        suppressAnnounceRecompute = true;
+        suppressAnnounceUntil = performance.now() + 400;
         window.scrollTo({ top: 0, behavior: 'instant' });
       }
 
