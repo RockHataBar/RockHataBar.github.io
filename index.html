@@ -629,7 +629,7 @@
       font-size: 17px;
       font-weight: bold;
       text-align: center;
-      margin-bottom: 18px;
+      margin-bottom: 34px;
     }
 
     .mood-options {
@@ -639,6 +639,11 @@
     }
 
     .mood-option-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
       padding: 14px 8px;
       border-radius: 10px;
       border: 1px solid var(--gold-dim);
@@ -651,10 +656,11 @@
       appearance: none;
     }
     .mood-option-btn:hover, .mood-option-btn:active { background: rgba(230, 185, 62, 0.15); }
+    .mood-option-icon { font-size: 24px; line-height: 1; }
 
     .mood-close-x {
       display: block;
-      margin: 0 0 14px auto;
+      margin: 0 0 4px auto;
       background: transparent;
       border: none;
       color: var(--secondary);
@@ -999,10 +1005,10 @@
       <div class="mood-step" id="moodStepMood">
         <div class="mood-modal-question">Який у тебе настрій?</div>
         <div class="mood-options">
-          <button type="button" class="mood-option-btn" onclick="moodPick('mood','bright')">Бадьорий</button>
-          <button type="button" class="mood-option-btn" onclick="moodPick('mood','chill')">Спокійний</button>
-          <button type="button" class="mood-option-btn" onclick="moodPick('mood','romance')">Романтичний</button>
-          <button type="button" class="mood-option-btn" onclick="moodPick('mood','wild')">Хочу відірватись</button>
+          <button type="button" class="mood-option-btn" onclick="moodPick('mood','bright')"><span class="mood-option-icon">😄</span>Бадьорий</button>
+          <button type="button" class="mood-option-btn" onclick="moodPick('mood','chill')"><span class="mood-option-icon">😌</span>Спокійний</button>
+          <button type="button" class="mood-option-btn" onclick="moodPick('mood','romance')"><span class="mood-option-icon">😍</span>Романтичний</button>
+          <button type="button" class="mood-option-btn" onclick="moodPick('mood','wild')"><span class="mood-option-icon">🥳</span>Хочу відірватись</button>
         </div>
       </div>
 
@@ -1366,9 +1372,21 @@
       }
     }
 
+    // Коли switchMainTab примусово скидає скрол на 0 (не через реальний
+    // жест користувача), це не повинно розгортати назад уже згорнутий
+    // банер анонсу — інакше шапка сама по собі виростає власною
+    // CSS-анімацією саме тоді, коли одночасно "заїжджає" новий розділ, і
+    // це виглядає, ніби вся конструкція сторінки дриґається. Прапорець
+    // гасить рівно один наступний перерахунок видимості банера.
+    let suppressAnnounceRecompute = false;
+
     function updateAnnounceVisibility() {
       if (!announceBanner) return;
-      announceBanner.classList.toggle('collapsed', window.scrollY > ANNOUNCE_HIDE_THRESHOLD);
+      if (suppressAnnounceRecompute) {
+        suppressAnnounceRecompute = false;
+      } else {
+        announceBanner.classList.toggle('collapsed', window.scrollY > ANNOUNCE_HIDE_THRESHOLD);
+      }
       updateSubnavOffset();
     }
 
@@ -1404,6 +1422,7 @@
       // новий, можливо короткий, розділ) — скролимо миттєво ДО підміни
       // DOM, з тих самих причин, що й раніше.
       if (window.scrollY > 0) {
+        suppressAnnounceRecompute = true;
         window.scrollTo({ top: 0, behavior: 'instant' });
       }
 
