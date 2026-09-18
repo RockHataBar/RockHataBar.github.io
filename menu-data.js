@@ -43,9 +43,9 @@ const menuData = {
     { name: 'Лікер SAMBUCA', desc: '', volume: '50 мл', price: '100 ₴', img: '' },
     { name: 'Абсент', desc: '', volume: '50 мл', price: '100 ₴', img: '' },
     { name: 'Бренді Couronnier Napoleon', desc: '', volume: '50 мл', price: '70 ₴', img: '' },
-    { name: 'Горілка Хортиця', desc: '', volume: '50 мл', price: '30 ₴', img: '' },
+    { name: 'Горілка Nemiroff original', desc: '', volume: '50 мл', price: '40 ₴', img: '' },
     { name: 'Вермут Martini Rosso', desc: '', volume: '50 мл', price: '70 ₴', img: '' },
-    { name: 'Лікер Амаретто SanMartino', desc: '', volume: '50 мл', price: '70 ₴', img: '' },
+    { name: 'Лікер Амаретто VillaCardea', desc: '', volume: '50 мл', price: '70 ₴', img: '' },
     { name: 'Лікер Вишневий SanMartino', desc: '', volume: '50 мл', price: '70 ₴', img: '' },
     { name: 'Лікер Лімончелло SanMartino', desc: '', volume: '50 мл', price: '70 ₴', img: '' }
   ],
@@ -104,8 +104,9 @@ const menuData = {
     { name: 'КАРТОПЛЯ ФРІ', desc: '', volume: '200 гр', price: '120 ₴', img: '' },
     { name: 'НАГЕТСИ', desc: '', volume: '6 шт', price: '140 ₴', img: '' },
     { name: 'ЦИБУЛЕВІ КІЛЬЦЯ', desc: '', volume: '10 шт', price: '150 ₴', img: '' },
-    { name: 'АРАХІС BigBob', desc: 'смаки в асортименті', volume: '60 гр', price: '50 ₴', img: '' },
-    { name: 'ЧИПСИ LAY\'S', desc: 'смаки в асортименті', volume: '60 гр', price: '80 ₴', img: '' }
+    { name: 'АРАХІС BigBob', desc: 'смаки в асортименті', volume: '60 гр', price: '60 ₴', img: '' },
+    { name: 'ГРІНКИ JExtraSI', desc: 'смаки в асортименті', volume: '90 гр', price: '120 ₴', img: '' },
+    { name: 'Kabanosy', desc: '', volume: '60 гр', price: '120 ₴', img: '' }
   ],
   extras: [
     { name: 'АПЕЛЬСИН', desc: '', volume: '10 гр', price: '15 ₴', img: '' },
