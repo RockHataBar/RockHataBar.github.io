@@ -1311,6 +1311,13 @@
             <div class="item-stats">${VOLUME_ICON}<span>${MOOD_CATEGORY_LABELS[drink._category]}${drink.volume ? ' · ' + drink.volume : ''}</span></div>
           </div>
         `;
+        if (drink.img) {
+          const photoDiv = document.createElement('div');
+          photoDiv.className = 'item-photo';
+          photoDiv.onclick = () => openModal(drink.img);
+          photoDiv.innerHTML = `<img src="${drink.img}" alt="${drink.name}" loading="lazy">`;
+          rowDiv.appendChild(photoDiv);
+        }
         list.appendChild(rowDiv);
       });
     }
