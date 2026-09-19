@@ -475,6 +475,23 @@
       line-height: 1.25;
     }
 
+    /* Мінідикатор міцності — 3 позначки одразу за назвою: заповнені
+       (▪) золотом, порожні (▫) приглушені. Не показуємо його там, де
+       міцність не задана (безалкогольне, снеки, додатки). */
+    .item-strength {
+      display: inline-flex;
+      gap: 1px;
+      margin-left: 8px;
+      font-size: 11px;
+      letter-spacing: 1px;
+      vertical-align: middle;
+      position: relative;
+      top: -2px;
+    }
+
+    .item-strength .dot-on { color: var(--gold); }
+    .item-strength .dot-off { color: rgba(230, 185, 62, 0.25); }
+
     .item-price {
       font-family: var(--font-display);
       font-weight: 700;
@@ -1120,7 +1137,7 @@
   <!-- Версія у query-параметрі — щоб мобільний Safari та GitHub Pages CDN
        не віддавали закешовану стару версію файлу після зміни меню.
        Змінюйте цей номер щоразу, коли редагуєте menu-data.js. -->
-  <script src="menu-data.js?v=20260918"></script>
+  <script src="menu-data.js?v=20260919"></script>
   <script>
     const VOLUME_ICON = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l-1.5 15a2 2 0 0 1-2 1.8h-5a2 2 0 0 1-2-1.8L6 3Z"/><path d="M5 3h14"/></svg>`;
 
@@ -1260,6 +1277,15 @@
       });
     }
 
+    const STRENGTH_MAX = 3;
+
+    function strengthDotsHtml(strength) {
+      if (!strength) return '';
+      const filled = '<span class="dot-on">▪</span>'.repeat(strength);
+      const empty = '<span class="dot-off">▫</span>'.repeat(STRENGTH_MAX - strength);
+      return ` <span class="item-strength" aria-label="Міцність ${strength} з ${STRENGTH_MAX}">${filled}${empty}</span>`;
+    }
+
     function renderMenu(items, containerId) {
       const menuDiv = document.getElementById(containerId);
       if (!menuDiv) return;
@@ -1270,7 +1296,7 @@
         const infoDiv = document.createElement('div');
         infoDiv.className = 'item-info';
         infoDiv.innerHTML = `
-          <div class="item-name">${drink.name}</div>
+          <div class="item-name">${drink.name}${strengthDotsHtml(drink.strength)}</div>
           <div class="item-price">${drink.price}</div>
           ${drink.desc ? `<div class="item-desc">${drink.desc}</div>` : ''}
           ${drink.volume ? `<div class="item-stats">${VOLUME_ICON}<span>${drink.volume}</span></div>` : ''}
