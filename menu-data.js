@@ -90,10 +90,10 @@ const menuData = {
     { name: 'ЛИМОН М\'ЯТА', desc: '20%', volume: '50 мл', price: '50 ₴', img: '', strength: 2 }
   ],
   beer: [
-    { name: 'Львівське Фірмове', desc: 'СВІТЛЕ', volume: '500 мл', price: '80 ₴', img: '', strength: 1 },
-    { name: 'DUNKEL', desc: 'ТЕМНЕ', volume: '500 мл', price: '80 ₴', img: '', strength: 1 },
-    { name: 'STAROPRAMEN З/Б', desc: 'СВІТЛЕ', volume: '500 мл', price: '80 ₴', img: '', strength: 1 },
-    { name: 'Б/а Krounenbourg 1664', desc: '', volume: '0.33 мл', price: '80 ₴', img: '', strength: 1 }
+    { name: 'Львівське Фірмове', desc: 'СВІТЛЕ', volume: '500 мл', price: '80 ₴', img: 'img/beer_lvivske.jpg', strength: 1 },
+    { name: 'DUNKEL', desc: 'ТЕМНЕ', volume: '500 мл', price: '80 ₴', img: 'img/beer_dunkel.jpg', strength: 1 },
+    { name: 'STAROPRAMEN З/Б', desc: 'СВІТЛЕ', volume: '500 мл', price: '80 ₴', img: 'img/beer_staropramen.jpg', strength: 1 },
+    { name: 'Б/а Krounenbourg 1664', desc: '', volume: '0.33 мл', price: '80 ₴', img: 'img/beer_krounenbourg1664.jpg', strength: 1 }
   ],
   wine: [
 
@@ -105,7 +105,7 @@ const menuData = {
     { name: 'Тонік SWEPPES', desc: '', volume: '250 мл', price: '40 ₴', img: '' },
     { name: 'CocaCola', desc: '', volume: '250 мл', price: '40 ₴', img: '' },
     { name: 'Sprite', desc: '', volume: '250 мл', price: '40 ₴', img: '' },
-    { name: 'Пиво Б/а Krounenbourg 1664', desc: '', volume: '0.33 мл', price: '80 ₴', img: '' },
+    { name: 'Пиво Б/а Krounenbourg 1664', desc: '', volume: '0.33 мл', price: '80 ₴', img: 'img/beer_krounenbourg1664.jpg' },
     { name: 'ЛИМОНАД', desc: 'смаки в асортименті', volume: '250 мл', price: '80 ₴', img: '' },
     { name: 'СІК', desc: 'смаки в асортименті', volume: '250 мл', price: '50 ₴', img: '' }
   ],
