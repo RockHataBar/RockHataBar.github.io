@@ -30,7 +30,7 @@ const menuData = {
     { name: 'КАЙДАШ', desc: 'ГОРІЛКА / ТАБАСКО / ГРЕНАДИН', volume: '50 мл', price: '80 ₴', img: 'img/kaidash.jpg', strength: 3 },
     { name: 'МЕРКУРІЙ', desc: 'САМБУКА / БЕЙЛІЗ / ГРЕНАДИН', volume: '50 мл', price: '100 ₴', img: 'img/merkuriy.jpg', strength: 2 },
     { name: 'ВЕРШКОВИЙ МАРЦИПАН', desc: 'БЕЙЛІЗ/ АМАРЕТТО', volume: '50 МЛ', price: '100 ₴', img: 'img/vershkoviy_martsypan.jpg', strength: 1 },
-    { name: 'ІНТЕРСІТІ', desc: 'СЕТ З ДЕСЯТИ ШОТІВ КРАФТОВИХ НАСТОЯНОК 20% ТА 40%', volume: '500 МЛ', price: '500 ₴', img: 'img/intercity.jpg', strength: 3 }
+    { name: 'ІНТЕРСІТІ', desc: 'СЕТ З ДЕСЯТИ ШОТІВ КРАФТОВИХ НАСТОЯНОК 20% ТА 40%', volume: '500 МЛ', price: '500 ₴', img: '', strength: 3 }
   ],
   strongAlcohol: [
     { name: 'Ром Captain Morgan Spiced Gold', desc: '', volume: '50 мл', price: '90 ₴', img: '', strength: 3 },
