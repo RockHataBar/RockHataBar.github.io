@@ -110,12 +110,12 @@ const menuData = {
     { name: 'СІК', desc: 'смаки в асортименті', volume: '250 мл', price: '50 ₴', img: '' }
   ],
   snacks: [
-    { name: 'КАРТОПЛЯ ФРІ', desc: '', volume: '200 гр', price: '120 ₴', img: '' },
-    { name: 'НАГЕТСИ', desc: '', volume: '6 шт', price: '140 ₴', img: '' },
-    { name: 'ЦИБУЛЕВІ КІЛЬЦЯ', desc: '', volume: '10 шт', price: '150 ₴', img: '' },
-    { name: 'АРАХІС BigBob', desc: 'смаки в асортименті', volume: '60 гр', price: '60 ₴', img: '' },
-    { name: 'ГРІНКИ JExtraSI', desc: 'смаки в асортименті', volume: '90 гр', price: '120 ₴', img: '' },
-    { name: 'Kabanosy', desc: '', volume: '60 гр', price: '120 ₴', img: '' }
+    { name: 'КАРТОПЛЯ ФРІ', desc: '', volume: '200 гр', price: '120 ₴', img: 'img/kartoplya_fri.jpg' },
+    { name: 'НАГЕТСИ', desc: '', volume: '6 шт', price: '140 ₴', img: 'img/nagetsy.jpg' },
+    { name: 'ЦИБУЛЕВІ КІЛЬЦЯ', desc: '', volume: '10 шт', price: '150 ₴', img: 'img/cybuleve_kiltsya.jpg' },
+    { name: 'АРАХІС BigBob', desc: 'смаки в асортименті', volume: '60 гр', price: '60 ₴', img: 'img/arahis_bigbob.jpg' },
+    { name: 'ГРІНКИ JExtraSI', desc: 'смаки в асортименті', volume: '90 гр', price: '120 ₴', img: 'img/grinky_jextrasi.jpg' },
+    { name: 'Kabanosy', desc: '', volume: '60 гр', price: '120 ₴', img: 'img/kabanosy.jpg' }
   ],
   extras: [
     { name: 'АПЕЛЬСИН', desc: '', volume: '10 гр', price: '15 ₴', img: '' },
