@@ -118,9 +118,9 @@ const menuData = {
     { name: 'Kabanosy', desc: '', volume: '60 гр', price: '120 ₴', img: 'img/kabanosy.jpg' }
   ],
   extras: [
-    { name: 'АПЕЛЬСИН', desc: '', volume: '10 гр', price: '15 ₴', img: '' },
-    { name: 'ЛАЙМ', desc: '', volume: '10 гр', price: '10 ₴', img: '' },
-    { name: 'ЛИМОН', desc: '', volume: '10 гр', price: '10 ₴', img: '' },
-    { name: 'Вершки', desc: '', volume: '10 гр', price: '10 ₴', img: '' }
+    { name: 'АПЕЛЬСИН', desc: '', volume: '10 гр', price: '15 ₴', img: 'img/extra_apelsyn.jpg' },
+    { name: 'ЛАЙМ', desc: '', volume: '10 гр', price: '10 ₴', img: 'img/extra_lime.jpg' },
+    { name: 'ЛИМОН', desc: '', volume: '10 гр', price: '10 ₴', img: 'img/extra_lymon.jpg' },
+    { name: 'Вершки', desc: '', volume: '10 гр', price: '10 ₴', img: 'img/extra_vershky.jpg' }
   ]
 };
