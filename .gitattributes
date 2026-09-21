@@ -1,3 +1,0 @@
-# Shell scripts run inside Linux containers — CRLF (from a Windows checkout)
-# breaks their shebang line, so force LF regardless of local git config.
-*.sh text eol=lf

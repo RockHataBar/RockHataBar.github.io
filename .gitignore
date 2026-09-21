@@ -1,5 +1,1 @@
 menu.html
-
-# admin-server: secrets and runtime data never belong in the repo.
-admin-server/.env
-admin-server/**/node_modules/
