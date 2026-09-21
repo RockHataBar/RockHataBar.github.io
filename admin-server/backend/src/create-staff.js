@@ -2,13 +2,14 @@
 // command line, before the staff-management UI has anyone to log in with).
 // Run inside the backend container:
 //   docker compose exec backend npm run create-staff -- username "Ім'я" owner
+//   docker compose exec backend npm run create-staff -- username "Ім'я" owner СвійПароль
 const bcrypt = require('bcryptjs');
 const { pool } = require('./db');
 
 async function main() {
-  const [, , username, displayName, role] = process.argv;
+  const [, , username, displayName, role, customPassword] = process.argv;
   if (!username || !displayName || !role) {
-    console.error('Usage: create-staff <username> <"Display Name"> <owner|bartender>');
+    console.error('Usage: create-staff <username> <"Display Name"> <owner|bartender> [password]');
     process.exit(1);
   }
   if (!['owner', 'bartender'].includes(role)) {
@@ -16,7 +17,7 @@ async function main() {
     process.exit(1);
   }
 
-  const password = require('crypto').randomBytes(9).toString('base64url');
+  const password = customPassword || require('crypto').randomBytes(9).toString('base64url');
   const hash = await bcrypt.hash(password, 10);
 
   await pool.query(

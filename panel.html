@@ -396,9 +396,13 @@
                     <div class="field full">
                         <label>Роль</label>
                         <select name="role">
-                            <option value="bartender">Бармен — тільки ціни й додавання товару</option>
-                            <option value="owner">Власник — повний доступ</option>
+                            <option value="bartender">Бармен — повний доступ до меню</option>
+                            <option value="owner">Власник — плюс керування персоналом</option>
                         </select>
+                    </div>
+                    <div class="field full">
+                        <label>Пароль (необов'язково — залиш пустим, і згенерується сам)</label>
+                        <input name="password">
                     </div>
                 </div>
                 <div class="item-foot">
@@ -413,7 +417,7 @@
                     const username = val('username').trim();
                     const data = await api('/api/staff', {
                         method: 'POST',
-                        body: { username, displayName: val('displayName').trim(), role: val('role') },
+                        body: { username, displayName: val('displayName').trim(), role: val('role'), password: val('password').trim() },
                     });
                     loadStaff();
                     setStatus(`Акаунт «${username}» створено. Пароль (покажіть один раз і збережіть): ${data.password}`, 'ok');

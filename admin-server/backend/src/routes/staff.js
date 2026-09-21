@@ -17,11 +17,11 @@ router.get('/', async (req, res) => {
 // Creates an account and returns the one-time generated password. It is
 // never stored in readable form or shown again after this response.
 router.post('/', async (req, res) => {
-  const { username, displayName, role } = req.body || {};
+  const { username, displayName, role, password: customPassword } = req.body || {};
   if (!username || !displayName || !['owner', 'bartender'].includes(role)) {
     return res.status(400).json({ error: "Вкажіть логін, ім'я та роль" });
   }
-  const password = crypto.randomBytes(9).toString('base64url');
+  const password = customPassword?.trim() || crypto.randomBytes(9).toString('base64url');
   const hash = await bcrypt.hash(password, 10);
   try {
     const { rows } = await pool.query(
