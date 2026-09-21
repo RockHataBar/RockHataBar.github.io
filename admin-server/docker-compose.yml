@@ -31,20 +31,19 @@ services:
     volumes:
       - repo-clone:/repo
 
-  # Free, no port-forwarding needed. On the Cloudflare dashboard, create a
-  # tunnel pointed at http://backend:3000, copy its token into .env as
-  # CLOUDFLARE_TUNNEL_TOKEN, and this container carries the public URL for
-  # as long as the laptop (and Docker) is up — gone the moment it's off.
+  # Free, no domain and no Cloudflare account needed — a "quick tunnel"
+  # gives a random https://<words>.trycloudflare.com address that changes
+  # each time this container restarts. Find the current address with:
+  #   docker compose logs cloudflared | grep trycloudflare
+  # Lives only as long as the laptop (and Docker) is up.
   cloudflared:
     image: cloudflare/cloudflared:latest
     restart: unless-stopped
-    command: tunnel run
-    environment:
-      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN}
+    command: tunnel --url http://backend:3000
     depends_on:
       - backend
     profiles:
-      - tunnel # `docker compose --profile tunnel up` once CLOUDFLARE_TUNNEL_TOKEN is set
+      - tunnel # `docker compose --profile tunnel up -d` to start it
 
 volumes:
   db-data:
