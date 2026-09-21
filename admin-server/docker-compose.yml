@@ -1,0 +1,51 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: rockhata
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+      POSTGRES_DB: rockhata
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    # No ports exposed to the host — only the backend container talks to it.
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      PGHOST: db
+      PGUSER: rockhata
+      PGPASSWORD: ${PGPASSWORD}
+      PGDATABASE: rockhata
+      JWT_SECRET: ${JWT_SECRET}
+      GITHUB_REPO_URL: ${GITHUB_REPO_URL}
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+      GIT_BRANCH: ${GIT_BRANCH:-main}
+      GIT_AUTHOR_NAME: ${GIT_AUTHOR_NAME:-ROCK HATA Admin Panel}
+      GIT_AUTHOR_EMAIL: ${GIT_AUTHOR_EMAIL:-admin-panel@rockhata.local}
+    ports:
+      - "127.0.0.1:3000:3000" # only reachable on the laptop itself + via the tunnel below
+    volumes:
+      - repo-clone:/repo
+
+  # Free, no port-forwarding needed. On the Cloudflare dashboard, create a
+  # tunnel pointed at http://backend:3000, copy its token into .env as
+  # CLOUDFLARE_TUNNEL_TOKEN, and this container carries the public URL for
+  # as long as the laptop (and Docker) is up — gone the moment it's off.
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on:
+      - backend
+    profiles:
+      - tunnel # `docker compose --profile tunnel up` once CLOUDFLARE_TUNNEL_TOKEN is set
+
+volumes:
+  db-data:
+  repo-clone:
