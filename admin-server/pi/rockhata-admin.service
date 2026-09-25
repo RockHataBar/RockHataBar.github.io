@@ -1,0 +1,25 @@
+[Unit]
+Description=ROCK HATA menu admin panel
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=rockhata
+Group=rockhata
+WorkingDirectory=/opt/rockhata-admin
+EnvironmentFile=/etc/rockhata/admin.env
+Environment=HOME=/var/lib/rockhata
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/node --disable-warning=ExperimentalWarning src/index.js
+Restart=always
+RestartSec=5
+
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/rockhata
+
+[Install]
+WantedBy=multi-user.target
