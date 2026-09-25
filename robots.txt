@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /admin-server/
 
 Sitemap: https://rockhatabar.github.io/sitemap.xml

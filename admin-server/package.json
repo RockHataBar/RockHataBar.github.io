@@ -1,0 +1,21 @@
+{
+  "name": "rockhata-admin-server",
+  "version": "2.0.0",
+  "private": true,
+  "type": "commonjs",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "migrate": "node src/migrate.js",
+    "set-password": "node src/set-password.js",
+    "import-menu": "node src/import-existing.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2"
+  }
+}

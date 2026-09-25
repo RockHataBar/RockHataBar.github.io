@@ -1,1 +1,7 @@
 menu.html
+
+# admin-server: runtime data never belongs in the repo.
+admin-server/node_modules/
+*.db
+*.db-wal
+*.db-shm
