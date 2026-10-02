@@ -100,14 +100,14 @@ const menuData = {
   ],
   nonAlcohol: [
     { name: 'Кава', desc: 'зварена в турці', volume: '', price: '60 ₴', img: '' },
-    { name: 'Чай', desc: 'Чорний, зелений, трав\'яний, фруктовий', volume: '', price: '40 ₴', img: '' },
-    { name: 'Енергетичний напій Battery', desc: '', volume: '0.33 мл', price: '50 ₴', img: '' },
+    { name: 'Чай', desc: 'Чорний, зелений, трав\'яний, фруктовий', volume: '', price: '50 ₴', img: '' },
+    { name: 'Енергетичний напій Battery', desc: '', volume: '0.33 мл', price: '60 ₴', img: '' },
     { name: 'Тонік SWEPPES', desc: '', volume: '250 мл', price: '40 ₴', img: '' },
     { name: 'CocaCola', desc: '', volume: '250 мл', price: '40 ₴', img: '' },
     { name: 'Sprite', desc: '', volume: '250 мл', price: '40 ₴', img: '' },
     { name: 'Пиво Б/а Krounenbourg 1664', desc: '', volume: '0.33 мл', price: '80 ₴', img: 'img/beer_krounenbourg1664.jpg' },
     { name: 'ЛИМОНАД', desc: 'смаки в асортименті', volume: '250 мл', price: '80 ₴', img: '' },
-    { name: 'СІК', desc: 'смаки в асортименті', volume: '250 мл', price: '50 ₴', img: '' }
+    { name: 'СІК', desc: 'смаки в асортименті', volume: '250 мл', price: '60 ₴', img: '' }
   ],
   snacks: [
     { name: 'КАРТОПЛЯ ФРІ', desc: '', volume: '200 гр', price: '120 ₴', img: 'img/kartoplya_fri.jpg' },
