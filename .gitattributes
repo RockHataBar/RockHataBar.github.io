@@ -1,4 +1,0 @@
-# Shell scripts run on Linux (the Raspberry Pi); CRLF from a Windows
-# checkout would break them.
-*.sh text eol=lf
-*.service text eol=lf
