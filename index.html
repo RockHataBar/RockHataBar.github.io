@@ -760,6 +760,40 @@
       .item-photo { width: 70px; }
     }
 
+    /* ================= ІНФО-БЛОКИ ПІД МЕНЮ ================= */
+    .info-wrap { padding: 0 16px; max-width: 720px; margin: 36px auto 0; padding-bottom: 72px; }
+    .info-card {
+      border: 1px solid rgba(230, 185, 62, 0.35);
+      border-radius: 14px;
+      padding: 16px 18px;
+      margin: 0 0 14px;
+      background: #121210;
+    }
+    .info-card h2 {
+      font-family: var(--font-display);
+      color: var(--gold);
+      font-size: 20px;
+      margin: 0 0 8px;
+      font-weight: bold;
+    }
+    .info-card p { margin: 0 0 8px; line-height: 1.55; color: var(--text); font-size: 15px; }
+    .info-card p:last-child { margin-bottom: 0; }
+    .info-card .muted { color: var(--secondary); font-size: 14px; }
+    .info-card a { color: var(--gold); }
+    .info-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+    .info-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 44px; padding: 10px 16px; border-radius: 10px;
+      border: 1px solid var(--gold); color: var(--gold) !important;
+      text-decoration: none; font-weight: bold; font-size: 14px;
+    }
+    .info-btn.primary { background: var(--gold); color: #14140f !important; }
+    .event-list { list-style: none; padding: 0; margin: 4px 0 8px; }
+    .event-list li { padding: 8px 0; border-bottom: 1px dashed rgba(255, 255, 255, 0.16); }
+    .event-list li:last-child { border-bottom: none; }
+    .event-date { color: var(--gold); font-weight: bold; margin-right: 8px; }
+    .event-empty { display: none; }
+
     /* ================= КНОПКА ЗВОРОТНОГО ЗВ'ЯЗКУ ================= */
     .feedback-btn {
       position: fixed;
@@ -1122,6 +1156,66 @@
     <section id="extras" class="tab-panel">
       <h2 class="section-title">Додатки</h2>
       <div class="items-list" id="menu-extras"></div>
+    </section>
+  </div>
+
+  <!--
+    ІНФО-БЛОКИ: текст про бар, як дійти, афіша, бронь і для гуртів.
+    Афіша: кожна подія — <li data-date="РРРР-ММ-ДД">. Подія зникає сама
+    наступного дня після дати; якщо подій не лишилось — показується
+    рядок «Нові концерти анонсуємо в Instagram і Telegram».
+  -->
+  <div class="info-wrap">
+    <section class="info-card" id="about">
+      <h2>Про Rock Hata</h2>
+      <p>Rock Hata (Рок Хата) — рок-бар із живою музикою в центрі Миколаєва. На нашій сцені грають місцеві та гостьові рок-гурти, проходять джеми, квартирники, тематичні вечірки й благодійні концерти.</p>
+      <p>У барі — авторські коктейлі, крафтові настоянки й лікери, пиво та снеки. Місце для тих, хто любить гітарний звук, чесну атмосферу й компанію однодумців. Підходить і для великої компанії.</p>
+      <p class="muted">Щодня 16:00–23:00 · Оплата карткою · Wi-Fi</p>
+    </section>
+
+    <section class="info-card" id="afisha">
+      <h2>Афіша</h2>
+      <ul class="event-list" id="eventList">
+        <li data-date="2026-10-31"><span class="event-date">31.10, 19:00</span>Halloween Night Live — костюмована вечірка: Bulrush, RottenMayer, Bloom Of Inhul. Вхід 250 грн.</li>
+      </ul>
+      <p class="muted event-empty" id="eventEmpty">Нові концерти анонсуємо в Instagram і Telegram.</p>
+      <div class="info-actions">
+        <a class="info-btn" data-track="instagram" href="https://www.instagram.com/rockhata.bar/" target="_blank" rel="noopener">Instagram</a>
+        <a class="info-btn" data-track="telegram" href="https://t.me/+ucsSuHhXJedjZjAy" target="_blank" rel="noopener">Telegram-канал</a>
+      </div>
+    </section>
+
+    <section class="info-card" id="booking">
+      <h2>Бронь столика</h2>
+      <p>Напишіть нам в Instagram: дата, час і скільки вас буде. На концерти краще бронювати заздалегідь.</p>
+      <div class="info-actions">
+        <a class="info-btn primary" data-track="booking" href="https://ig.me/m/rockhata.bar" target="_blank" rel="noopener">Забронювати в Direct</a>
+      </div>
+    </section>
+
+    <section class="info-card" id="directions">
+      <h2>Як дійти</h2>
+      <p>м. Миколаїв, вул. Захисників Миколаєва, 38/1 (колишня вул. Декабристів) — у центрі, поруч із дитячим містечком «Казка», неподалік проспекту Центрального.</p>
+      <div class="info-actions">
+        <a class="info-btn primary" data-track="directions" href="https://www.google.com/maps/dir/?api=1&amp;destination=46.9653925,31.9850785" target="_blank" rel="noopener">Прокласти маршрут</a>
+        <a class="info-btn" data-track="maps_profile" href="https://maps.google.com/?cid=857424528404282044" target="_blank" rel="noopener">Ми на Google Картах</a>
+      </div>
+    </section>
+
+    <section class="info-card" id="bands">
+      <h2>Для гуртів</h2>
+      <p>Хочете зіграти в Rock Hata? Надішліть нам у Direct посилання на ваші треки чи відео з виступів і бажані дати. Ми регулярно збираємо місцевих і гостьових музикантів, джеми й благодійні концерти.</p>
+      <div class="info-actions">
+        <a class="info-btn" data-track="bands_contact" href="https://ig.me/m/rockhata.bar" target="_blank" rel="noopener">Написати в Direct</a>
+      </div>
+    </section>
+
+    <section class="info-card" id="reviews">
+      <h2>Відгуки</h2>
+      <p>Сподобалось у нас? Залиште відгук у Google — це 30 секунд і дуже допомагає бару.</p>
+      <div class="info-actions">
+        <a class="info-btn primary" data-track="review_google" href="https://g.page/r/Cbx6PtUQL-YLEBM/review" target="_blank" rel="noopener">Залишити відгук у Google</a>
+      </div>
     </section>
   </div>
 
@@ -1752,6 +1846,54 @@
       if (announceModal.style.display === 'flex') closeAnnounceModal();
       if (moodModal.style.display === 'flex') closeMoodModal();
     });
+  </script>
+  <script>
+    // Афіша: ховаємо минулі події; якщо нічого не лишилось — показуємо підказку.
+    (function () {
+      var list = document.getElementById('eventList');
+      if (!list) return;
+      var today = new Date(); today.setHours(0, 0, 0, 0);
+      var left = 0;
+      list.querySelectorAll('li[data-date]').forEach(function (li) {
+        var d = new Date(li.getAttribute('data-date') + 'T00:00:00');
+        if (d < today) { li.style.display = 'none'; } else { left++; }
+      });
+      if (!left) {
+        list.style.display = 'none';
+        var empty = document.getElementById('eventEmpty');
+        if (empty) empty.style.display = 'block';
+      }
+    })();
+
+    // Аналітика GA4: рахуємо кліки по ключових кнопках (Звіти → Події).
+    (function () {
+      function track(name, el) {
+        try {
+          if (typeof gtag === 'function') {
+            gtag('event', name, { link_url: el.href || '', transport_type: 'beacon' });
+          }
+        } catch (e) {}
+      }
+      var map = [
+        ['.review-btn', 'review_google'],
+        ['.feedback-btn', 'feedback_telegram'],
+        ['.tg-channel-btn', 'telegram'],
+        ['.brand-address', 'directions'],
+        ['.announce-modal-go', 'announce_open_post']
+      ];
+      document.addEventListener('click', function (ev) {
+        var el = ev.target.closest('a, button');
+        if (!el) return;
+        var name = el.getAttribute('data-track');
+        if (!name) {
+          for (var i = 0; i < map.length; i++) {
+            if (el.matches(map[i][0])) { name = map[i][1]; break; }
+          }
+        }
+        if (!name && el.classList.contains('announce-banner')) name = 'announce_banner';
+        if (name) track(name, el);
+      }, true);
+    })();
   </script>
 </body>
 </html>
