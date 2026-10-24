@@ -779,6 +779,27 @@
     }
     .feedback-btn svg { width: 24px; height: 24px; }
 
+    /* Кнопка відгуку в Google — над кнопкою зворотного зв'язку. */
+    .review-btn {
+      position: fixed;
+      right: 16px;
+      bottom: 78px;
+      z-index: 1500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 2px solid var(--gold);
+      background: #14140f;
+      color: var(--gold);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+      text-decoration: none;
+      box-sizing: border-box;
+    }
+    .review-btn svg { width: 24px; height: 24px; }
+
     /* ================= РАДІО ================= */
     .radio-btn {
       position: fixed;
@@ -861,22 +882,88 @@
   {
     "@context": "https://schema.org",
     "@type": "BarOrPub",
+    "@id": "https://rockhatabar.github.io/#bar",
     "name": "ROCK HATA",
     "alternateName": "Рок Хата",
     "keywords": "рок-бар, крафтовий бар, коктейль-бар, пивний бар, бар з живою музикою, бар з концертами, коктейлі, крафтове пиво, настоянки, лікери, бар Миколаїв",
     "image": "https://rockhatabar.github.io/img/og-image.jpg",
     "url": "https://rockhatabar.github.io/",
+    "menu": "https://rockhatabar.github.io/",
+    "acceptsReservations": true,
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "вул. Захисників Миколаєва 38/1",
       "addressLocality": "Миколаїв",
+      "postalCode": "54000",
       "addressCountry": "UA"
     },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 46.9653925,
+      "longitude": 31.9850785
+    },
+    "hasMap": "https://maps.google.com/?cid=857424528404282044",
+    "sameAs": [
+      "https://www.instagram.com/rockhata.bar/",
+      "https://www.facebook.com/rockhata/",
+      "https://t.me/+ucsSuHhXJedjZjAy"
+    ],
     "openingHoursSpecification": {
       "@type": "OpeningHoursSpecification",
       "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
       "opens": "16:00",
       "closes": "23:00"
+    }
+  }
+  </script>
+
+  <!--
+    ПОДІЯ ДЛЯ GOOGLE: розмітка поточного анонсу, щоб концерт міг потрапити
+    в блок подій у пошуку Google. Оновлюйте разом із банером анонсу нижче:
+    name, startDate/endDate (формат РРРР-ММ-ДДTГГ:ХХ+02:00 взимку,
+    +03:00 влітку), description, performer, ціну в offers і url поста.
+    Після дати події блок можна видалити або замінити наступною подією.
+  -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "MusicEvent",
+    "name": "Halloween Night Live у Rock Hata",
+    "description": "Костюмована вечірка з живою музикою: Bulrush, RottenMayer та Bloom Of Inhul.",
+    "startDate": "2026-10-31T19:00+02:00",
+    "endDate": "2026-10-31T23:00+02:00",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+    "image": "https://rockhatabar.github.io/img/announce.jpg?v=20261021",
+    "location": {
+      "@type": "BarOrPub",
+      "@id": "https://rockhatabar.github.io/#bar",
+      "name": "ROCK HATA",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "вул. Захисників Миколаєва 38/1",
+        "addressLocality": "Миколаїв",
+        "postalCode": "54000",
+        "addressCountry": "UA"
+      }
+    },
+    "performer": [
+      { "@type": "MusicGroup", "name": "Bulrush" },
+      { "@type": "MusicGroup", "name": "RottenMayer" },
+      { "@type": "MusicGroup", "name": "Bloom Of Inhul" }
+    ],
+    "organizer": {
+      "@type": "Organization",
+      "name": "ROCK HATA",
+      "url": "https://rockhatabar.github.io/"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "250",
+      "priceCurrency": "UAH",
+      "availability": "https://schema.org/InStock",
+      "url": "https://www.instagram.com/rockhata.bar/p/DehaMufx-dm/",
+      "validFrom": "2026-10-15T00:00+03:00"
     }
   }
   </script>
@@ -1097,6 +1184,20 @@
       </div>
     </div>
   </div>
+
+  <!--
+    ВІДГУК У GOOGLE: посилання з Google-профілю компанії
+    (Профіль → «Запросити відгуки»). Веде одразу на форму відгуку.
+  -->
+  <a class="review-btn"
+     href="https://g.page/r/Cbx6PtUQL-YLEBM/review"
+     target="_blank" rel="noopener"
+     aria-label="Залишити відгук у Google"
+     title="Залишити відгук у Google">
+    <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+      <path d="M12 2.5l2.94 5.96 6.56.95-4.75 4.63 1.12 6.54L12 17.5l-5.87 3.08 1.12-6.54L2.5 9.41l6.56-.95L12 2.5z"/>
+    </svg>
+  </a>
 
   <a class="feedback-btn"
      href="https://t.me/O1010100001?text=Добрий день! Хочу залишити відгук/скаргу щодо ROCK HATA:%0A"
