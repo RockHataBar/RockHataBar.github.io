@@ -14,7 +14,7 @@ const menuData = {
   cocktails: [
     { name: 'ДЖИН ТОНІК', desc: 'джин/ тонік/ лайм', volume: '150 мл', price: '120 ₴', img: 'img/gin_tonic.jpg', strength: 1 },
     { name: 'NEGRONI', desc: 'СУХИЙ ДЖИН / ЧЕРВОНИЙ ВЕРМУТ / БІТТЕР', volume: '200 мл', price: '230 ₴', img: 'img/negroni.jpg', strength: 3, hit: true },
-    { name: 'CHERRY IVANSON', desc: 'JIM BEAM RedStag / СИРОП ВИШНЯ / СІК ВИШНЯ / ЛИМОННИЙ ФРЕШ', volume: '150 мл', price: '180 ₴', img: 'img/cherry_ivanson.jpg', strength: 2 },
+    { name: 'CHERRY IVANSON', desc: 'JIM BEAM RedStag / СИРОП ВИШНЯ / СІК ВИШНЯ / ЛИМОННИЙ ФРЕШ', volume: '150 мл', price: '200 ₴', img: 'img/cherry_ivanson.jpg', strength: 2 },
     { name: 'ТЕКІЛА САНРАЙЗ', desc: 'ТЕКІЛА / АПЕЛЬСИНОВИЙ СІК / ГРЕНАДИН', volume: '150 мл', price: '150 ₴', img: 'img/tequila_sunrise.jpg', strength: 1 },
     { name: 'СЕКС ON ЗЕ БІЧ', desc: 'ГОРІЛКА / ПЕРСИКОВИЙ ЛІКЕР / АПЕЛЬСИНОВИЙ СІК / СІК ЖУРАВЛИНИ', volume: '200 мл', price: '120 ₴', img: 'img/sex_on_the_beach.jpg', strength: 1 },
     { name: 'ROSO TONIC', desc: 'ЧЕРВОНИЙ ВЕРМУТ / ТОНІК / АПЕЛЬСИН', volume: '200 МЛ', price: '120 ₴', img: 'img/roso_tonic.jpg', strength: 1 },
@@ -40,9 +40,9 @@ const menuData = {
     { name: 'Текіла Sierra Blanko', desc: '', volume: '50 мл', price: '100 ₴', img: 'img/sa_sierra_blanco.jpg', strength: 3 },
     { name: 'Віскі Jameson', desc: '', volume: '50 мл', price: '120 ₴', img: 'img/sa_jameson.jpg', strength: 3 },
     { name: 'Віскі Jack Daniels', desc: '', volume: '50 мл', price: '120 ₴', img: 'img/sa_jackdaniels.jpg', strength: 3 },
-    { name: 'Віскі Paddy', desc: '', volume: '50 мл', price: '100 ₴', img: 'img/sa_paddy.jpg', strength: 3 },
-    { name: 'Бурбон Jim Beam White', desc: '', volume: '50 мл', price: '100 ₴', img: 'img/sa_jimbeam_white.jpg', strength: 3 },
-    { name: 'Бурбон Jim Beam Red Stag', desc: '', volume: '50 мл', price: '100 ₴', img: 'img/sa_jimbeam_redstag.jpg', strength: 3 },
+    { name: 'Віскі Paddy', desc: '', volume: '50 мл', price: '120 ₴', img: 'img/sa_paddy.jpg', strength: 3 },
+    { name: 'Бурбон Jim Beam White', desc: '', volume: '50 мл', price: '120 ₴', img: 'img/sa_jimbeam_white.jpg', strength: 3 },
+    { name: 'Бурбон Jim Beam Red Stag', desc: '', volume: '50 мл', price: '120 ₴', img: 'img/sa_jimbeam_redstag.jpg', strength: 3 },
     { name: 'Джин Finsbury Platinum 47%', desc: '', volume: '50 мл', price: '90 ₴', img: 'img/sa_finsbury_platinum.jpg', strength: 3 },
     { name: 'Джин Finsbury Wild Strawberry', desc: '', volume: '50 мл', price: '90 ₴', img: 'img/sa_finsbury_strawberry.jpg', strength: 3 },
     { name: 'Лікер Jagermeister', desc: '', volume: '50 мл', price: '100 ₴', img: 'img/sa_jagermeister.jpg', strength: 3 },
@@ -91,12 +91,17 @@ const menuData = {
   ],
   beer: [
     { name: 'Львівське Фірмове', desc: 'СВІТЛЕ', volume: '500 мл', price: '80 ₴', img: 'img/beer_lvivske.jpg', strength: 1 },
-    { name: 'DUNKEL', desc: 'ТЕМНЕ', volume: '500 мл', price: '80 ₴', img: 'img/beer_dunkel.jpg', strength: 1 },
-    { name: 'STAROPRAMEN З/Б', desc: 'СВІТЛЕ', volume: '500 мл', price: '80 ₴', img: 'img/beer_staropramen.jpg', strength: 1 },
-    { name: 'Б/а Krounenbourg 1664', desc: '', volume: '0.33 мл', price: '80 ₴', img: 'img/beer_krounenbourg1664.jpg', strength: 1 }
+    { name: 'Львівське Різдвяне', desc: 'ТЕМНЕ', volume: '500 мл', price: '90 ₴', img: '', strength: 1 },
+    { name: 'STAROPRAMEN З/Б', desc: 'СВІТЛЕ', volume: '500 мл', price: '90 ₴', img: 'img/beer_staropramen.jpg', strength: 1 },
+    { name: 'Б/а Krounenbourg 1664', desc: '', volume: '0.33 мл', price: '80 ₴', img: 'img/beer_krounenbourg1664.jpg', strength: 1 },
+    { name: 'Carlsberg З/Б', desc: '', volume: '500 мл', price: '80 ₴', img: '', strength: 1 }
   ],
   wine: [
-
+    { name: 'Baron de Lusson', desc: 'сухе червоне', volume: '100 мл', price: '100 ₴', img: '', strength: 1 },
+    { name: 'Baron de Lusson', desc: 'сухе біле', volume: '100 мл', price: '100 ₴', img: '', strength: 1 },
+    { name: 'Baron de Lusson', desc: 'рожеве сухе', volume: '100 мл', price: '100 ₴', img: '', strength: 1 },
+    { name: 'Baron de Lusson', desc: 'червоне напівсолодке', volume: '100 мл', price: '100 ₴', img: '', strength: 1 },
+    { name: 'Baron de Lusson', desc: 'біле напівсолодке', volume: '100 мл', price: '100 ₴', img: '', strength: 1 }
   ],
   nonAlcohol: [
     { name: 'Кава', desc: 'зварена в турці', volume: '', price: '60 ₴', img: '' },
@@ -110,8 +115,8 @@ const menuData = {
     { name: 'СІК', desc: 'смаки в асортименті', volume: '250 мл', price: '60 ₴', img: '' }
   ],
   snacks: [
-    { name: 'КАРТОПЛЯ ФРІ', desc: '', volume: '200 гр', price: '120 ₴', img: 'img/kartoplya_fri.jpg' },
-    { name: 'НАГЕТСИ', desc: '', volume: '6 шт', price: '140 ₴', img: 'img/nagetsy.jpg' },
+    { name: 'КАРТОПЛЯ ФРІ', desc: '', volume: '200 гр', price: '140 ₴', img: 'img/kartoplya_fri.jpg' },
+    { name: 'НАГЕТСИ', desc: '', volume: '6 шт', price: '160 ₴', img: 'img/nagetsy.jpg' },
     { name: 'ЦИБУЛЕВІ КІЛЬЦЯ', desc: '', volume: '10 шт', price: '150 ₴', img: 'img/cybuleve_kiltsya.jpg' },
     { name: 'АРАХІС BigBob', desc: 'смаки в асортименті', volume: '60 гр', price: '60 ₴', img: 'img/arahis_bigbob.jpg' },
     { name: 'ГРІНКИ JExtraSI', desc: 'смаки в асортименті', volume: '90 гр', price: '120 ₴', img: 'img/grinky_jextrasi.jpg' },
