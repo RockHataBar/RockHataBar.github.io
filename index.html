@@ -967,6 +967,101 @@
     }
   }
   </script>
+
+  <!--
+    ДЖЕМИ ДЛЯ GOOGLE: щосуботи (молодіжний) і щонеділі (класичний) з 18:00, вхід вільний.
+    Скрипт сам додає розмітку джемів на найближчі 4 тижні — щотижня оновлювати не треба.
+    Якщо в якийсь день джему не буде (концерт, свято) — допишіть дату в JAM_SKIP.
+    Якщо зміниться час або формат — поправте JAM_TIME і тексти в JAMS.
+  -->
+  <script>
+  (function () {
+    var JAM_SKIP = ['2026-10-31']; // РРРР-ММ-ДД, дні без джему (31.10 — Halloween)
+    var JAM_TIME = '18:00';
+    var DAYS_AHEAD = 28;
+    var JAMS = {
+      6: {
+        name: 'Молодіжний джем у Rock Hata',
+        description: 'Молодіжний джем-сейшн щосуботи: вхід вільний, приходьте зі своїм інструментом і грайте разом з іншими музикантами.'
+      },
+      0: {
+        name: 'Джем у Rock Hata',
+        description: 'Джем-сейшн щонеділі: вхід вільний, приходьте зі своїм інструментом і грайте разом з іншими музикантами.'
+      }
+    };
+    var BAR = {
+      '@type': 'BarOrPub',
+      '@id': 'https://rockhatabar.github.io/#bar',
+      name: 'ROCK HATA',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'вул. Захисників Миколаєва 38/1',
+        addressLocality: 'Миколаїв',
+        postalCode: '54000',
+        addressCountry: 'UA'
+      }
+    };
+
+    function fmt(date, opts) {
+      opts.timeZone = 'Europe/Kyiv';
+      try { return new Intl.DateTimeFormat('en-CA', opts).format(date); }
+      catch (e) { opts.timeZone = 'Europe/Kiev'; return new Intl.DateTimeFormat('en-CA', opts).format(date); }
+    }
+
+    // Зсув часового поясу Києва на конкретну дату: +02:00 взимку, +03:00 влітку.
+    function kyivOffset(y, m, d) {
+      var probe = new Date(Date.UTC(y, m - 1, d, 12));
+      try {
+        var part = new Intl.DateTimeFormat('en-US', { timeZone: 'Europe/Kyiv', timeZoneName: 'longOffset' })
+          .formatToParts(probe).filter(function (p) { return p.type === 'timeZoneName'; })[0];
+        var match = part && /([+-]\d{2}):?(\d{2})/.exec(part.value);
+        if (match) return match[1] + ':' + match[2];
+      } catch (e) {}
+      // Запасний варіант: правило ЄС (остання неділя березня — остання неділя жовтня).
+      function lastSunday(month) {
+        var last = new Date(Date.UTC(y, month, 0));
+        return last.getUTCDate() - last.getUTCDay();
+      }
+      var summer = (m > 3 || (m === 3 && d >= lastSunday(3))) && (m < 10 || (m === 10 && d < lastSunday(10)));
+      return summer ? '+03:00' : '+02:00';
+    }
+
+    var events = [];
+    var now = Date.now();
+    for (var i = 0; i < DAYS_AHEAD; i++) {
+      var ymd = fmt(new Date(now + i * 864e5), { year: 'numeric', month: '2-digit', day: '2-digit' });
+      var p = ymd.split('-').map(Number);
+      var weekday = new Date(Date.UTC(p[0], p[1] - 1, p[2])).getUTCDay();
+      var jam = JAMS[weekday];
+      if (!jam || JAM_SKIP.indexOf(ymd) !== -1) continue;
+      events.push({
+        '@context': 'https://schema.org',
+        '@type': 'MusicEvent',
+        name: jam.name,
+        description: jam.description,
+        startDate: ymd + 'T' + JAM_TIME + kyivOffset(p[0], p[1], p[2]),
+        eventStatus: 'https://schema.org/EventScheduled',
+        eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+        isAccessibleForFree: true,
+        image: 'https://rockhatabar.github.io/img/og-image.jpg',
+        location: BAR,
+        organizer: { '@type': 'Organization', name: 'ROCK HATA', url: 'https://rockhatabar.github.io/' },
+        offers: {
+          '@type': 'Offer',
+          price: '0',
+          priceCurrency: 'UAH',
+          availability: 'https://schema.org/InStock',
+          url: 'https://www.instagram.com/p/DWL4YW1jRr8/'
+        }
+      });
+    }
+    if (!events.length) return;
+    var tag = document.createElement('script');
+    tag.type = 'application/ld+json';
+    tag.text = JSON.stringify(events);
+    document.head.appendChild(tag);
+  })();
+  </script>
 </head>
 <body id="top">
 
